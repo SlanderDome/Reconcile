@@ -1,6 +1,7 @@
 /* ============================================================
    Reconcile.ly — reconcile.js
    AWB matching engine with 2% tolerance classification
+   + Currency auto-detection and cross-currency support
    ============================================================ */
 
 const Reconciler = (() => {
@@ -49,6 +50,11 @@ const Reconciler = (() => {
     'deliverycity', 'delivery city', 'location', 'ship_to_city', 'region'
   ];
 
+  const CURRENCY_CODE_ALIASES = [
+    'currency', 'currency_code', 'currencycode', 'currency code',
+    'cur', 'ccy', 'iso_currency', 'isocurrency'
+  ];
+
   function normalizeColName(name) {
     return String(name).trim().toLowerCase().replace(/[^a-z0-9]/g, '');
   }
@@ -79,16 +85,98 @@ const Reconciler = (() => {
     };
   }
 
+  /* ---------- Currency Symbol Map ---------- */
+  const SYMBOL_TO_CURRENCY = {
+    '$': 'USD',
+    '₹': 'INR',
+    '€': 'EUR',
+    '£': 'GBP',
+  };
+
+  const CURRENCY_CODE_SET = new Set(['USD', 'INR', 'EUR', 'GBP']);
+
+  /* ---------- Currency Auto-Detection ---------- */
+  /**
+   * Scans the amount column values (and optional currency column)
+   * of parsed rows to determine the most likely currency.
+   * Returns 'USD' | 'INR' | 'EUR' | 'GBP' | null
+   */
+  function detectCurrency(rows, amountColName, headers) {
+    const votes = { USD: 0, INR: 0, EUR: 0, GBP: 0 };
+
+    // 1. Check for a dedicated currency code column
+    const currencyCol = findColumn(headers, CURRENCY_CODE_ALIASES);
+    if (currencyCol) {
+      const sampleSize = Math.min(rows.length, 50);
+      for (let i = 0; i < sampleSize; i++) {
+        const code = String(rows[i][currencyCol] || '').trim().toUpperCase();
+        if (CURRENCY_CODE_SET.has(code)) votes[code] += 5; // strong signal
+      }
+    }
+
+    // 2. Scan the first 50 amount values for currency symbols
+    if (amountColName) {
+      const sampleSize = Math.min(rows.length, 50);
+      for (let i = 0; i < sampleSize; i++) {
+        const raw = String(rows[i][amountColName] || '');
+        for (const [symbol, code] of Object.entries(SYMBOL_TO_CURRENCY)) {
+          if (raw.includes(symbol)) votes[code] += 1;
+        }
+      }
+    }
+
+    // Find the top vote
+    let best = null, bestCount = 0;
+    for (const [code, count] of Object.entries(votes)) {
+      if (count > bestCount) { best = code; bestCount = count; }
+    }
+
+    return bestCount > 0 ? best : null;
+  }
+
   /* ---------- Parse Amount ---------- */
+  /**
+   * Strips currency symbols and handles both Western (1,200.50)
+   * and Indian (1,20,000.50) number formats.
+   */
   function parseAmount(val) {
     if (val == null || val === '') return 0;
-    const s = String(val).replace(/[^0-9.\-]/g, '');
+    // Convert to string and strip currency symbols & whitespace
+    let s = String(val).trim();
+    // Remove known currency symbols
+    s = s.replace(/[$₹€£]/g, '');
+    // Remove any remaining letters (e.g., "INR", "USD")
+    s = s.replace(/[A-Za-z]/g, '');
+    s = s.trim();
+
+    // Handle Indian & Western comma formats:
+    // If the string has commas and a period, strip commas (they are grouping)
+    // If the string has commas but NO period, check if it looks like Indian format
+    if (s.includes(',') && s.includes('.')) {
+      // e.g. "1,20,000.50" or "1,200.50" → remove commas
+      s = s.replace(/,/g, '');
+    } else if (s.includes(',')) {
+      // Could be "1,200" (Western, no decimals) or "1,20,000" (Indian, no decimals)
+      // Either way, just remove commas to get the raw number
+      s = s.replace(/,/g, '');
+    }
+
+    // Keep only digits, decimal point, and negative sign
+    s = s.replace(/[^0-9.\-]/g, '');
     const n = parseFloat(s);
     return isNaN(n) ? 0 : n;
   }
 
   /* ---------- Main Reconciliation ---------- */
-  function reconcile(orderRows, remittanceRows, orderCols, remitCols) {
+  /**
+   * @param {Object} options - Optional settings
+   * @param {number} options.orderMultiplier - Multiplier for order values (for FX conversion)
+   * @param {string} options.displayCurrency - Currency code for dashboard display
+   */
+  function reconcile(orderRows, remittanceRows, orderCols, remitCols, options) {
+    const opts = options || {};
+    const orderMultiplier = opts.orderMultiplier || 1;
+
     // Build remittance lookup by normalized AWB
     const remitMap = new Map();
     for (const row of remittanceRows) {
@@ -112,7 +200,8 @@ const Reconciler = (() => {
 
       const normAWB = App.normalizeAWB(rawAWB);
       const displayAWB = String(rawAWB).trim();
-      const orderValue = parseAmount(row[orderCols.amount]);
+      // Apply the FX multiplier to orderValue so it's in the same unit as remittance
+      const orderValue = parseAmount(row[orderCols.amount]) * orderMultiplier;
       const orderDate = row[orderCols.date] || null;
       const city = row[orderCols.city] || '—';
 
@@ -182,6 +271,8 @@ const Reconciler = (() => {
       totalMissing,
       totalShortPaidGap,
       totalPending,
+      displayCurrency: opts.displayCurrency || 'USD',
+      orderMultiplier,
       sessionId: App.generateSessionId(),
       timestamp: new Date().toISOString(),
     };
@@ -192,6 +283,7 @@ const Reconciler = (() => {
   return {
     detectOrderColumns,
     detectRemittanceColumns,
+    detectCurrency,
     reconcile,
     parseAmount,
   };

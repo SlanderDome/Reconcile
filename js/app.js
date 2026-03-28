@@ -30,19 +30,62 @@ const App = (() => {
   }
 
   /* ---------- Formatting ---------- */
+  const CURRENCY_SYMBOLS = {
+    USD: '$',
+    INR: '₹',
+    EUR: '€',
+    GBP: '£',
+  };
+
+  const CURRENCY_LABELS = {
+    USD: 'US Dollar',
+    INR: 'Indian Rupee',
+    EUR: 'Euro',
+    GBP: 'British Pound',
+  };
+
+  /**
+   * Returns the display currency from the last saved session, or 'USD' as default.
+   */
+  function getDisplayCurrency() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const data = JSON.parse(raw);
+        if (data && data.summary && data.summary.displayCurrency) {
+          return data.summary.displayCurrency;
+        }
+      }
+    } catch (_) {}
+    return 'USD';
+  }
+
   function formatCurrency(n) {
-    if (n == null || isNaN(n)) return '$0.00';
+    const cur = getDisplayCurrency();
+    const sym = CURRENCY_SYMBOLS[cur] || '$';
+    if (n == null || isNaN(n)) return sym + '0.00';
     const abs = Math.abs(n);
     const sign = n < 0 ? '-' : '';
-    if (abs >= 1_000_000) return sign + '$' + (abs / 1_000_000).toFixed(1) + 'M';
-    if (abs >= 100_000) return sign + '$' + (abs / 1_000).toFixed(1) + 'K';
-    return sign + '$' + abs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    if (cur === 'INR') {
+      // Indian numbering: Crores (1,00,00,000) and Lakhs (1,00,000)
+      if (abs >= 1_00_00_000) return sign + sym + (abs / 1_00_00_000).toFixed(2) + 'Cr';
+      if (abs >= 1_00_000) return sign + sym + (abs / 1_00_000).toFixed(2) + 'L';
+      return sign + sym + abs.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    // Western formatting (USD, EUR, GBP)
+    if (abs >= 1_000_000) return sign + sym + (abs / 1_000_000).toFixed(1) + 'M';
+    if (abs >= 100_000) return sign + sym + (abs / 1_000).toFixed(1) + 'K';
+    return sign + sym + abs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
   function formatCurrencyFull(n) {
-    if (n == null || isNaN(n)) return '$0.00';
+    const cur = getDisplayCurrency();
+    const sym = CURRENCY_SYMBOLS[cur] || '$';
+    if (n == null || isNaN(n)) return sym + '0.00';
     const sign = n < 0 ? '-' : '';
-    return sign + '$' + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const locale = cur === 'INR' ? 'en-IN' : 'en-US';
+    return sign + sym + Math.abs(n).toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
   function formatDate(d) {
@@ -169,9 +212,12 @@ const App = (() => {
 
   return {
     STORAGE_KEY,
+    CURRENCY_SYMBOLS,
+    CURRENCY_LABELS,
     saveSession,
     loadSession,
     clearSession,
+    getDisplayCurrency,
     formatCurrency,
     formatCurrencyFull,
     formatDate,
