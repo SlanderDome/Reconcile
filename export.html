@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Reconcile.ly — Export & Summary</title>
+  <meta name="description" content="Reconciliation complete. Download your discrepancy report."/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=Epilogue:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="css/styles.css" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- Top Navigation (unified) -->
+<header class="upload-header" style="background:rgba(251,249,245,0.9); backdrop-filter:blur(12px); border-bottom:1px solid rgba(222,192,187,0.15);">
+  <div class="syne-bold" style="font-size:1.5rem; letter-spacing:-0.03em; color:var(--primary);">Reconcile.ly</div>
+  <nav style="display:flex; gap:2rem;">
+    <a href="index.html" style="color:var(--on-surface-variant); font-weight:500; transition:color 0.2s;" onmouseenter="this.style.color='var(--primary)'" onmouseleave="this.style.color='var(--on-surface-variant)'">Upload</a>
+    <a href="dashboard.html" style="color:var(--on-surface-variant); font-weight:500; transition:color 0.2s;" onmouseenter="this.style.color='var(--primary)'" onmouseleave="this.style.color='var(--on-surface-variant)'">Dashboard</a>
+    <a href="export.html" style="color:var(--primary); font-weight:700; border-bottom:2px solid var(--primary); padding-bottom:0.25rem;">Export</a>
+  </nav>
+  <div style="display:flex; align-items:center; gap:1rem;">
+    <button style="padding:0.5rem; border-radius:50%; color:var(--on-surface-variant); transition:all 0.2s;" onmouseenter="this.style.color='var(--primary)';this.style.background='rgba(161,57,42,0.06)'" onmouseleave="this.style.color='var(--on-surface-variant)';this.style.background='transparent'">
+      <span class="material-symbols-outlined">dark_mode</span>
+    </button>
+    <button style="padding:0.5rem; border-radius:50%; color:var(--on-surface-variant); transition:all 0.2s;" onmouseenter="this.style.color='var(--primary)';this.style.background='rgba(161,57,42,0.06)'" onmouseleave="this.style.color='var(--on-surface-variant)';this.style.background='transparent'">
+      <span class="material-symbols-outlined">notifications</span>
+    </button>
+    <div style="width:2rem; height:2rem; border-radius:50%; background:var(--surface-container-highest); border:2px solid rgba(222,192,187,0.3); display:flex; align-items:center; justify-content:center;">
+      <span class="material-symbols-outlined" style="font-size:14px; color:var(--on-surface-variant);">person</span>
+    </div>
+  </div>
+</header>
+
+<main class="export-main bg-grid-dots" style="padding-left:1.5rem; padding-right:1.5rem;">
+  <!-- Background grid -->
+  <div style="position:absolute; inset:0; background-image:radial-gradient(circle,rgba(222,192,187,0.15) 1px,transparent 1px); background-size:32px 32px; pointer-events:none; opacity:0.15;"></div>
+
+  <div style="position:relative; z-index:10; width:100%; max-width:52rem; display:flex; flex-direction:column; align-items:center; text-align:center;">
+    <!-- Badge -->
+    <div class="export-badge">
+      <span style="width:6px; height:6px; border-radius:50%; background:var(--secondary);"></span>
+      Process Finalized
+    </div>
+
+    <!-- Headline -->
+    <h1 id="export-headline" class="export-headline">
+      Reconciliation<br/>
+      <span style="color:var(--primary); font-style:italic;">Complete</span>
+    </h1>
+
+    <!-- Summary Stats -->
+    <div class="export-stats">
+      <div class="export-stat">
+        <p class="export-stat-label">Total Matched</p>
+        <div style="display:flex; align-items:baseline; gap:0.5rem;">
+          <span id="export-matched" class="export-stat-value">$0</span>
+          <span class="export-stat-tag" style="color:var(--secondary);">MATCHED</span>
+        </div>
+      </div>
+      <div class="export-stat">
+        <p class="export-stat-label">Total Missing</p>
+        <div style="display:flex; align-items:baseline; gap:0.5rem;">
+          <span id="export-missing" class="export-stat-value">$0</span>
+          <span class="export-stat-tag" style="color:var(--error);">ABSENT</span>
+        </div>
+      </div>
+      <div class="export-stat">
+        <p class="export-stat-label">Total Short-paid</p>
+        <div style="display:flex; align-items:baseline; gap:0.5rem;">
+          <span id="export-shortpaid" class="export-stat-value">$0</span>
+          <span class="export-stat-tag" style="color:var(--tertiary-container);">DISCREPANCY</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:0; width:100%; max-width:28rem;">
+      <button id="btn-download-report" class="btn-download">
+        <span class="material-symbols-outlined">ios_share</span>
+        Download discrepancy report
+      </button>
+      <a id="btn-new-reconciliation" href="#" class="link-new">
+        <span class="material-symbols-outlined" style="font-size:1rem;">refresh</span>
+        Start new reconciliation
+      </a>
+    </div>
+  </div>
+
+  <!-- Decorative blurred shapes -->
+  <div style="position:absolute; bottom:0; right:0; width:33%; height:16rem; background:var(--surface-container-low); opacity:0.5; z-index:-1; transform:translateY(5rem) rotate(12deg); filter:blur(48px);"></div>
+  <div style="position:absolute; top:5rem; left:0; width:25%; height:16rem; background:rgba(161,57,42,0.05); opacity:0.3; z-index:-1; transform:translateX(-5rem) rotate(-12deg); filter:blur(48px);"></div>
+
+  <!-- Fixed corner metadata -->
+  <div style="position:fixed; bottom:2rem; left:2rem; display:none;" class="lg-block">
+    <div style="opacity:0.4;">
+      <p style="font-family:var(--font-label); font-size:0.6rem; text-transform:uppercase; letter-spacing:0.15em; color:var(--on-surface-variant);">Archival Reference</p>
+      <p id="export-session-id" style="font-family:var(--font-label); font-size:0.75rem; font-weight:500;">REC_0000</p>
+    </div>
+  </div>
+  <div style="position:fixed; bottom:2rem; right:2rem; display:none;" class="lg-block">
+    <div style="text-align:right; opacity:0.4;">
+      <p style="font-family:var(--font-label); font-size:0.6rem; text-transform:uppercase; letter-spacing:0.15em; color:var(--on-surface-variant);">Generation Time</p>
+      <p id="export-timestamp" style="font-family:var(--font-label); font-size:0.75rem; font-weight:500;">—</p>
+    </div>
+  </div>
+</main>
+
+<!-- Mobile Bottom Nav -->
+<nav style="position:fixed; bottom:0; left:0; width:100%; background:rgba(228,226,222,0.9); backdrop-filter:blur(16px); border-top:1px solid rgba(222,192,187,0.2); z-index:50; display:flex; justify-content:space-around; align-items:center; padding:1rem 1.5rem;" class="md-hidden">
+  <a href="index.html" style="display:flex; flex-direction:column; align-items:center; gap:0.25rem; color:var(--on-surface-variant);">
+    <span class="material-symbols-outlined">cloud_upload</span>
+    <span style="font-family:var(--font-label); font-size:0.55rem; font-weight:700;">UPLOAD</span>
+  </a>
+  <a href="dashboard.html" style="display:flex; flex-direction:column; align-items:center; gap:0.25rem; color:var(--on-surface-variant);">
+    <span class="material-symbols-outlined">dashboard</span>
+    <span style="font-family:var(--font-label); font-size:0.55rem; font-weight:700;">DASHBOARD</span>
+  </a>
+  <a href="export.html" style="display:flex; flex-direction:column; align-items:center; gap:0.25rem; color:var(--primary);">
+    <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">ios_share</span>
+    <span style="font-family:var(--font-label); font-size:0.55rem; font-weight:700;">EXPORT</span>
+  </a>
+</nav>
+
+<script src="js/app.js"></script>
+<script src="js/export-page.js"></script>
+</body>
+</html>

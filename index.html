@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Reconcile.ly — Revenue Recovery</title>
+  <meta name="description" content="Reconcile your e-commerce order exports against courier remittance files to identify missing payouts and delivery discrepancies."/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=Epilogue:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="css/styles.css" rel="stylesheet"/>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+</head>
+<body class="terracotta-bg dm-sans" style="color:#fff; min-height:100vh;">
+<div class="blueprint-grid" style="min-height:100vh;">
+
+  <!-- Header -->
+  <header class="upload-header">
+    <div class="syne-bold" style="font-size:1.5rem; letter-spacing:-0.03em; color:#fff;">Reconcile.ly</div>
+    <nav style="display:flex; gap:2rem;">
+      <a href="index.html" style="color:#fff; font-weight:700; border-bottom:2px solid #fff; padding-bottom:0.25rem;">Upload</a>
+      <a href="dashboard.html" style="color:rgba(255,255,255,0.7); font-weight:500; transition:color 0.2s;" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,0.7)'">Dashboard</a>
+      <a href="export.html" style="color:rgba(255,255,255,0.7); font-weight:500; transition:color 0.2s;" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,0.7)'">Export</a>
+    </nav>
+    <div style="display:flex; align-items:center; gap:1rem;">
+      <button style="padding:0.5rem; border-radius:50%; color:#fff; transition:background 0.2s;" onmouseenter="this.style.background='rgba(255,255,255,0.1)'" onmouseleave="this.style.background='transparent'">
+        <span class="material-symbols-outlined">dark_mode</span>
+      </button>
+      <button style="padding:0.5rem; border-radius:50%; color:#fff; transition:background 0.2s;" onmouseenter="this.style.background='rgba(255,255,255,0.1)'" onmouseleave="this.style.background='transparent'">
+        <span class="material-symbols-outlined">notifications</span>
+      </button>
+      <div style="width:2rem; height:2rem; border-radius:50%; background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center;">
+        <span class="material-symbols-outlined" style="font-size:16px;">person</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="upload-main">
+    <!-- Hero -->
+    <section style="max-width:56rem; width:100%; text-align:center; margin-bottom:4rem;">
+      <div class="jb-mono" style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.2em; color:rgba(255,255,255,0.8); margin-bottom:1rem;">Revenue Recovery Engine</div>
+      <h1 class="syne-bold" style="font-size:clamp(2.5rem,6vw,4.5rem); letter-spacing:-0.04em; line-height:1.05; margin-bottom:2rem;">
+        Find out how much your <span style="color:rgba(0,0,0,0.3); font-style:italic;">courier owes you.</span>
+      </h1>
+      <p style="color:rgba(255,255,255,0.8); max-width:32rem; margin:0 auto; font-size:1.05rem; line-height:1.6;">
+        Reconcile your e-commerce order exports against courier remittance files to identify missing payouts and delivery discrepancies in seconds.
+      </p>
+    </section>
+
+    <!-- Drop Zones -->
+    <div style="max-width:68rem; width:100%; display:grid; grid-template-columns:1fr 1fr; gap:2rem; margin-bottom:3rem;">
+
+      <!-- Zone 1: Order Export -->
+      <div id="dropzone-order" class="drop-zone" style="color:#1b1c1a;">
+        <input type="file" id="file-input-order" accept=".csv,.xlsx,.xls" style="display:none"/>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
+          <div style="padding:0.75rem; background:rgba(161,57,42,0.1); border-radius:0.375rem;">
+            <span class="material-symbols-outlined" style="color:#a1392a;">shopping_bag</span>
+          </div>
+          <span class="jb-mono" style="font-size:0.6rem; color:#57423e; font-weight:500;">SOURCE A</span>
+        </div>
+        <h3 class="syne-bold" style="font-size:1.25rem; margin-bottom:0.5rem;">Order Export</h3>
+        <p style="font-size:0.875rem; color:#57423e; margin-bottom:1.5rem;">Upload your Shopify, Magento, or custom store order export.</p>
+
+        <!-- Empty state (drag area) -->
+        <div id="empty-state-order" class="drop-area">
+          <span class="material-symbols-outlined" style="font-size:2rem; color:#8a716d;">cloud_upload</span>
+          <span style="font-size:0.875rem; color:#8a716d;">Drag & drop or click to upload</span>
+          <span class="jb-mono" style="font-size:0.6rem; color:#8a716d;">CSV, XLSX</span>
+        </div>
+
+        <!-- Uploaded state -->
+        <div id="uploaded-state-order" class="uploaded-state">
+          <div style="width:2.5rem; height:2.5rem; border-radius:50%; background:#006c4e; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <span class="material-symbols-outlined" style="color:#fff; font-size:1rem; font-variation-settings:'FILL' 1;">check</span>
+          </div>
+          <div style="flex:1; overflow:hidden;">
+            <p id="filename-order" class="jb-mono" style="font-size:0.75rem; font-weight:700; color:#006c4e; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">—</p>
+            <p id="rowcount-order" class="jb-mono" style="font-size:0.6rem; color:rgba(0,113,81,0.6); margin-top:0.25rem;">—</p>
+          </div>
+          <button id="clear-order" style="color:rgba(0,108,78,0.4); transition:color 0.2s;" onmouseenter="this.style.color='#006c4e'" onmouseleave="this.style.color='rgba(0,108,78,0.4)'">
+            <span class="material-symbols-outlined" style="font-size:1.125rem;">close</span>
+          </button>
+        </div>
+
+        <div style="margin-top:1.5rem; display:flex; justify-content:space-between; align-items:center; padding-top:1.5rem; border-top:1px solid rgba(222,192,187,0.2);">
+          <div>
+            <span class="jb-mono" style="font-size:0.6rem; text-transform:uppercase; color:#8a716d;">Formats</span>
+            <span style="display:block; font-size:0.75rem; font-weight:500; margin-top:0.125rem;">CSV, XLSX</span>
+          </div>
+          <a id="sample-order" href="#" style="font-size:0.75rem; color:#a1392a; font-weight:700; display:flex; align-items:center; gap:0.25rem; transition:opacity 0.2s;" onmouseenter="this.style.opacity='0.7'" onmouseleave="this.style.opacity='1'">
+            <span class="material-symbols-outlined" style="font-size:0.875rem;">download</span>
+            Sample File
+          </a>
+        </div>
+      </div>
+
+      <!-- Zone 2: Courier Remittance -->
+      <div id="dropzone-remit" class="drop-zone" style="color:#1b1c1a;">
+        <input type="file" id="file-input-remit" accept=".csv,.xlsx,.xls" style="display:none"/>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
+          <div style="padding:0.75rem; background:rgba(161,57,42,0.1); border-radius:0.375rem;">
+            <span class="material-symbols-outlined" style="color:#a1392a;">local_shipping</span>
+          </div>
+          <span class="jb-mono" style="font-size:0.6rem; color:#57423e; font-weight:500;">SOURCE B</span>
+        </div>
+        <h3 class="syne-bold" style="font-size:1.25rem; margin-bottom:0.5rem;">Courier Remittance</h3>
+        <p style="font-size:0.875rem; color:#57423e; margin-bottom:1.5rem;">Upload the billing statement or remittance file from your courier.</p>
+
+        <!-- Empty state -->
+        <div id="empty-state-remit" class="drop-area">
+          <span class="material-symbols-outlined" style="font-size:2rem; color:#8a716d;">cloud_upload</span>
+          <span style="font-size:0.875rem; color:#8a716d;">Drag & drop or click to upload</span>
+          <span class="jb-mono" style="font-size:0.6rem; color:#8a716d;">CSV, XLSX</span>
+        </div>
+
+        <!-- Uploaded state -->
+        <div id="uploaded-state-remit" class="uploaded-state">
+          <div style="width:2.5rem; height:2.5rem; border-radius:50%; background:#006c4e; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <span class="material-symbols-outlined" style="color:#fff; font-size:1rem; font-variation-settings:'FILL' 1;">check</span>
+          </div>
+          <div style="flex:1; overflow:hidden;">
+            <p id="filename-remit" class="jb-mono" style="font-size:0.75rem; font-weight:700; color:#006c4e; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">—</p>
+            <p id="rowcount-remit" class="jb-mono" style="font-size:0.6rem; color:rgba(0,113,81,0.6); margin-top:0.25rem;">—</p>
+          </div>
+          <button id="clear-remit" style="color:rgba(0,108,78,0.4); transition:color 0.2s;" onmouseenter="this.style.color='#006c4e'" onmouseleave="this.style.color='rgba(0,108,78,0.4)'">
+            <span class="material-symbols-outlined" style="font-size:1.125rem;">close</span>
+          </button>
+        </div>
+
+        <div style="margin-top:1.5rem; display:flex; justify-content:space-between; align-items:center; padding-top:1.5rem; border-top:1px solid rgba(222,192,187,0.2);">
+          <div>
+            <span class="jb-mono" style="font-size:0.6rem; text-transform:uppercase; color:#8a716d;">Formats</span>
+            <span style="display:block; font-size:0.75rem; font-weight:500; margin-top:0.125rem;">CSV, XLSX</span>
+          </div>
+          <a id="sample-remit" href="#" style="font-size:0.75rem; color:#a1392a; font-weight:700; display:flex; align-items:center; gap:0.25rem; transition:opacity 0.2s;" onmouseenter="this.style.opacity='0.7'" onmouseleave="this.style.opacity='1'">
+            <span class="material-symbols-outlined" style="font-size:0.875rem;">download</span>
+            Sample File
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:1rem;">
+      <button id="btn-run-reconciliation" class="btn-run" disabled style="opacity:0.4;">
+        <span class="syne-bold" style="font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; display:flex; align-items:center; gap:0.75rem;">
+          Run reconciliation
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </span>
+      </button>
+      <p id="status-text" class="jb-mono" style="font-size:0.6rem; color:rgba(255,255,255,0.6);">Upload both files to begin reconciliation.</p>
+    </div>
+  </main>
+
+  <!-- Side decoration -->
+  <div style="display:none;" class="lg-show">
+    <div style="position:fixed; left:2rem; bottom:2rem; display:flex; align-items:center; gap:1rem; transform:rotate(-90deg); transform-origin:left; pointer-events:none;">
+      <span class="jb-mono" style="font-size:0.6rem; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.15em;">Archive Ref: REC-2024-10</span>
+      <div style="height:1px; width:6rem; background:rgba(255,255,255,0.2);"></div>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/reconcile.js"></script>
+<script src="js/upload.js"></script>
+</body>
+</html>
