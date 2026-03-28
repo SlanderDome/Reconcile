@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&amp;family=DM+Sans:wght@400;500;700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "inverse-on-surface": "#f1f1ef",
+                        "primary": "#b22206",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "primary-container": "#d63c20",
+                        "tertiary": "#825100",
+                        "surface-container-high": "#e9e8e6",
+                        "on-background": "#1a1c1b",
+                        "tertiary-container": "#a36700",
+                        "on-error": "#ffffff",
+                        "on-surface": "#1a1c1b",
+                        "surface-tint": "#b62409",
+                        "background": "#faf9f7",
+                        "on-secondary-fixed-variant": "#00513a",
+                        "primary-fixed": "#ffdad3",
+                        "tertiary-fixed-dim": "#ffb95e",
+                        "on-primary-fixed": "#3e0400",
+                        "surface-container-highest": "#e3e2e0",
+                        "secondary-fixed": "#85f8c9",
+                        "outline-variant": "#e3beb7",
+                        "primary-fixed-dim": "#ffb4a5",
+                        "on-primary-container": "#fffbff",
+                        "secondary-fixed-dim": "#67dbae",
+                        "on-tertiary-container": "#fffbff",
+                        "outline": "#8f7069",
+                        "tertiary-fixed": "#ffddb7",
+                        "on-surface-variant": "#5b403b",
+                        "on-secondary-fixed": "#002115",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#82f5c6",
+                        "surface-container": "#efeeec",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#2a1700",
+                        "surface-container-low": "#f4f3f1",
+                        "on-secondary": "#ffffff",
+                        "surface": "#faf9f7",
+                        "inverse-primary": "#ffb4a5",
+                        "on-secondary-container": "#007151",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed-variant": "#8e1400",
+                        "secondary": "#006c4e",
+                        "surface-bright": "#faf9f7",
+                        "surface-variant": "#e3e2e0",
+                        "on-tertiary": "#ffffff",
+                        "surface-dim": "#dadad8",
+                        "inverse-surface": "#2f3130"
+                    },
+                    fontFamily: {
+                        "headline": ["Syne", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label": ["DM Sans", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .editorial-shadow {
+            box-shadow: 0px 12px 32px rgba(178, 34, 6, 0.06);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full flex justify-between items-center px-8 h-16 bg-[#faf9f7]/80 backdrop-blur-xl border-b border-[#e3beb7]/15 z-50">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black text-[#b22206] tracking-tighter font-headline">FintechReconcile</span>
+<div class="hidden md:flex items-center gap-6">
+<a class="text-[#1a1c1b] font-medium hover:text-[#b22206] transition-colors duration-200" href="#">Upload</a>
+<a class="text-[#1a1c1b] font-medium hover:text-[#b22206] transition-colors duration-200" href="#">Dashboard</a>
+<a class="text-[#1a1c1b] font-medium hover:text-[#b22206] transition-colors duration-200" href="#">Discrepancies</a>
+<a class="text-[#b22206] font-bold border-b-2 border-[#b22206] pb-1" href="#">Export</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-[#f4f3f1] rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<button class="p-2 hover:bg-[#f4f3f1] rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden ml-2">
+<img alt="User profile avatar" data-alt="Close-up of a professional corporate headshot with soft studio lighting and a clean neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_Exc-h3q32WHbpgGLygCjF624sXaDVJXOWMyO8diKbf5ZRZnlP0dhe5JXTKhhzZ9vymWLjjISkPwG_arkiFt2jHoi7zCzGVVA5iHQZJAZ2H3S64f2RBHJypvAM9jxxJHpeo0-EewP6L7ujLT9DRm_sgctxgf5x9xdRiTPL6eaGACap5HUEoWt6r_75JIJqzxiKldda_qqb6Kb9t6W332ymyWnOBomVx6aeSc1XaY5QvAoJ4ZyA8iq0Fa0VBT5-0aSenR1X6RZtn0"/>
+</div>
+</div>
+</nav>
+<main class="pt-32 pb-24 px-8 max-w-7xl mx-auto flex flex-col md:flex-row gap-20">
+<!-- Left Column: Editorial Summary -->
+<div class="flex-1 space-y-12">
+<div class="space-y-4">
+<span class="font-label text-xs font-bold tracking-widest text-primary uppercase">Success Confirmation</span>
+<h1 class="font-headline text-6xl font-extrabold tracking-tighter leading-none text-on-surface">
+                    Reconciliation<br/>Complete.
+                </h1>
+<p class="text-on-surface-variant text-lg max-w-md leading-relaxed mt-6">
+                    The audit cycle for <span class="font-mono bg-surface-container px-1 rounded">Q3-2023-F2</span> has been successfully finalized. All discrepancies have been mapped, flagged, or resolved.
+                </p>
+</div>
+<div class="space-y-8 pt-8 border-t border-outline-variant/10">
+<div class="flex items-baseline justify-between group cursor-default">
+<span class="font-label text-sm text-on-surface-variant">Total Volume Processed</span>
+<span class="font-mono text-2xl font-medium text-on-surface group-hover:text-primary transition-colors">$1,240,492.00</span>
+</div>
+<div class="flex items-baseline justify-between group cursor-default">
+<span class="font-label text-sm text-on-surface-variant">Matched Transactions</span>
+<span class="font-mono text-2xl font-medium text-secondary">98.4%</span>
+</div>
+<div class="flex items-baseline justify-between group cursor-default">
+<span class="font-label text-sm text-on-surface-variant">Remaining Flags</span>
+<span class="font-mono text-2xl font-medium text-tertiary">12 Items</span>
+</div>
+</div>
+<div class="pt-12 flex flex-col items-start gap-6">
+<button class="group relative overflow-hidden bg-gradient-to-br from-primary to-primary-container text-on-primary px-10 py-5 rounded-lg flex items-center gap-3 active:scale-[0.98] transition-all editorial-shadow">
+<span class="material-symbols-outlined" data-weight="fill">download</span>
+<span class="font-headline font-bold text-lg tracking-tight">Download report</span>
+</button>
+<a class="font-label text-sm font-semibold text-on-surface-variant hover:text-primary flex items-center gap-2 group transition-colors" href="#">
+<span class="material-symbols-outlined text-base group-hover:translate-x-[-2px] transition-transform">arrow_back</span>
+                    Start new reconciliation
+                </a>
+</div>
+</div>
+<!-- Right Column: Visual Data Canvas -->
+<div class="flex-1">
+<div class="grid grid-cols-2 gap-4">
+<!-- Data Island 1 -->
+<div class="col-span-2 bg-surface-container-lowest p-8 rounded-xl editorial-shadow border border-outline-variant/5">
+<div class="flex justify-between items-start mb-12">
+<div>
+<h3 class="font-headline font-bold text-xl">Verification Hash</h3>
+<p class="font-label text-xs text-on-surface-variant">Blockchain immutable record</p>
+</div>
+<span class="material-symbols-outlined text-secondary">verified</span>
+</div>
+<div class="font-mono text-xs text-on-surface-variant break-all bg-surface px-4 py-3 rounded">
+                        RECON_SHA256: 8f72c3b1a9e0d4f5c6b7a8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9
+                    </div>
+</div>
+<!-- Data Island 2 -->
+<div class="bg-surface-container-low p-6 rounded-xl flex flex-col justify-between h-48">
+<span class="font-label text-xs font-bold text-on-surface-variant uppercase">Time to Completion</span>
+<div>
+<span class="font-mono text-4xl font-light text-on-surface">14</span>
+<span class="font-label text-sm text-on-surface-variant ml-1">mins</span>
+</div>
+</div>
+<!-- Data Island 3 -->
+<div class="bg-surface-container-low p-6 rounded-xl flex flex-col justify-between h-48">
+<span class="font-label text-xs font-bold text-on-surface-variant uppercase">Ledger Precision</span>
+<div>
+<span class="font-mono text-4xl font-light text-on-surface">100</span>
+<span class="font-label text-sm text-on-surface-variant ml-1">%</span>
+</div>
+</div>
+<!-- Bento Decorative Image -->
+<div class="col-span-2 h-64 rounded-xl overflow-hidden relative group">
+<img alt="Financial visualization abstract" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Abstract digital visualization of flowing financial data streams with subtle glowing orange and red lines on a dark sophisticated background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEWCJhYV5ofI2cEP9ZFG6Or4ts2fCpcRZU1hDllOWEC463KkRZJBUjfa4PvYefOyBMgNVyhul_bRv9tFNtg2Z70ZkyHOPyUyk_8oUrGkw52avYEmoCLFBhoobf0AXgdy9veKmYvv1eDrPZJVsWzLZq_vP5SfMw2MWgqqm25CSVk_xq10Rk0T4LcK9CTpOWUlxY5CV6sB3ZgExeUc17MBiLkWUFYNbBDZjUdSaDaGq_bkvNdrkzyF-OTpSp2NjJZJDNtV8q8BEGunY"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent"></div>
+<div class="absolute bottom-6 left-6">
+<span class="font-headline font-bold text-background text-2xl tracking-tight">Audit Trail Ready</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual Footer (Simulated SideNavBar items for desktop flow) -->
+<footer class="mt-20 border-t border-outline-variant/10 py-12 px-8">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-weight="fill">shield_person</span>
+<span class="font-headline font-bold text-on-surface-variant">ReconEngine v1.0</span>
+</div>
+<div class="flex items-center gap-12">
+<a class="font-label text-xs text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2 uppercase tracking-widest font-bold" href="#">
+<span class="material-symbols-outlined text-sm">help</span>
+                    Help Center
+                </a>
+<a class="font-label text-xs text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2 uppercase tracking-widest font-bold" href="#">
+<span class="material-symbols-outlined text-sm">person</span>
+                    Account Settings
+                </a>
+</div>
+<div class="text-on-surface-variant font-mono text-[10px] uppercase tracking-tighter opacity-50">
+                © 2024 FINTECHRECONCILE ARCHITECT. ALL RIGHTS RESERVED.
+            </div>
+</div>
+</footer>
+</body></html>

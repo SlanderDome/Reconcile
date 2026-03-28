@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reconcile.ly — Revenue Recovery</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&amp;family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;family=Epilogue:wght@700&amp;family=Plus+Jakarta+Sans:wght@400;500;600&amp;family=Space+Grotesk:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-tint": "#a43c2d",
+              "error-container": "#ffdad6",
+              "surface-container-high": "#eae8e4",
+              "tertiary": "#815100",
+              "secondary-fixed-dim": "#67dbae",
+              "on-secondary-fixed-variant": "#00513a",
+              "primary-fixed": "#ffdad4",
+              "on-background": "#1b1c1a",
+              "on-primary": "#ffffff",
+              "on-error-container": "#93000a",
+              "inverse-primary": "#ffb4a7",
+              "outline-variant": "#dec0bb",
+              "on-primary-container": "#fffbff",
+              "error": "#ba1a1a",
+              "surface-container-low": "#f5f3ef",
+              "secondary-fixed": "#85f8c9",
+              "primary": "#a1392a",
+              "outline": "#8a716d",
+              "surface-container-highest": "#e4e2de",
+              "surface-container": "#efeeea",
+              "background": "#fbf9f5",
+              "tertiary-fixed-dim": "#ffb95e",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-tertiary-container": "#fffbff",
+              "tertiary-container": "#a36700",
+              "on-tertiary": "#ffffff",
+              "on-surface": "#1b1c1a",
+              "surface-bright": "#fbf9f5",
+              "on-secondary-fixed": "#002115",
+              "on-surface-variant": "#57423e",
+              "inverse-surface": "#30312e",
+              "inverse-on-surface": "#f2f0ed",
+              "primary-container": "#c15140",
+              "surface-dim": "#dbdad6",
+              "secondary": "#006c4e",
+              "on-tertiary-fixed": "#2a1700",
+              "on-primary-fixed": "#400100",
+              "on-error": "#ffffff",
+              "tertiary-fixed": "#ffddb7",
+              "secondary-container": "#82f5c6",
+              "on-primary-fixed-variant": "#842418",
+              "surface-variant": "#e4e2de",
+              "surface": "#fbf9f5",
+              "primary-fixed-dim": "#ffb4a7",
+              "on-secondary-container": "#007151",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Syne", "Epilogue", "sans-serif"],
+              "body": ["DM Sans", "Plus Jakarta Sans", "sans-serif"],
+              "label": ["JetBrains Mono", "Space Grotesk", "monospace"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      /* Terracotta Gradient & Precise Grid */
+      .terracotta-bg {
+        background-color: #a1392a;
+        background-image: 
+          radial-gradient(at 0% 0%, #f04e30 0px, transparent 50%),
+          radial-gradient(at 100% 0%, #d97706 0px, transparent 50%),
+          radial-gradient(at 100% 100%, #a1392a 0px, transparent 50%),
+          radial-gradient(at 0% 100%, #f04e30 0px, transparent 50%);
+        background-attachment: fixed;
+      }
+      .blueprint-grid {
+        background-image: 
+          linear-gradient(to right, rgba(0, 0, 0, 0.12) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(0, 0, 0, 0.12) 1px, transparent 1px),
+          linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+        background-size: 80px 80px, 80px 80px, 20px 20px, 20px 20px;
+      }
+      .syne-bold { font-family: 'Syne', sans-serif; font-weight: 800; }
+      .jb-mono { font-family: 'JetBrains Mono', monospace; }
+      .dm-sans { font-family: 'DM Sans', sans-serif; }
+    </style>
+</head>
+<body class="terracotta-bg text-on-surface selection:bg-white/30 min-h-screen dm-sans">
+<div class="blueprint-grid min-h-screen">
+<!-- Header / TopNavBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-8 py-4 max-w-full bg-black/10 backdrop-blur-md border-b border-black/5">
+<div class="text-2xl font-bold tracking-tighter text-white syne-bold">
+        Reconcile.ly
+    </div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-white font-bold border-b-2 border-white pb-1" href="#">Upload</a>
+<a class="text-white/70 font-medium hover:text-white transition-colors" href="#">Dashboard</a>
+<a class="text-white/70 font-medium hover:text-white transition-colors" href="#">Export</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-white/10 transition-all text-white">
+<span class="material-symbols-outlined" data-icon="dark_mode">dark_mode</span>
+</button>
+<button class="p-2 rounded-full hover:bg-white/10 transition-all text-white">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-white/20 overflow-hidden border border-white/10">
+<img alt="User profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkiQYrdDtfrkAaco2cAuRulms4VtY345OZ7qv5uVdQgg9RwIpLF_6WJBHp16LDwR_51DVPh2RKCMOgNbeANdT_HAUiJHitPnf94cJ8BTexAxQwEbWhf-IMqLcdlPad4SU73KHbl_ziVc-i9mvR3xMMl5H6E1i0zHZYUIY2vg-puxi43AAhXqtZACpe-45vqt_u9F6QITPL1FdD4ec8db4eXfQ1sm3J1jNQATRhIDQd4NbNVPv1-TBuEXurqhnm9CgVBEHAic-Mh1o"/>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="relative pt-32 pb-20 px-6 min-h-screen flex flex-col items-center justify-center">
+<!-- Hero Section -->
+<section class="max-w-4xl w-full text-center mb-16 relative">
+<div class="jb-mono text-xs uppercase tracking-[0.2em] text-white/80 mb-4">Revenue Recovery Engine</div>
+<h1 class="syne-bold text-5xl md:text-7xl tracking-tighter text-white leading-[1.05] mb-8">
+            Find out how much your <span class="text-black/30 italic">courier owes you.</span>
+</h1>
+<p class="text-white/80 max-w-xl mx-auto text-lg leading-relaxed">
+            Reconcile your e-commerce order exports against courier remittance files to identify missing payouts and delivery discrepancies in seconds.
+        </p>
+</section>
+<!-- Drop Zones Container -->
+<div class="max-w-6xl w-full grid md:grid-cols-2 gap-8 mb-12">
+<!-- Zone 1: Order Export -->
+<div class="bg-white/90 backdrop-blur-sm p-8 rounded-xl flex flex-col h-full group border border-black/5 hover:border-black/10 transition-all duration-300">
+<div class="flex items-center justify-between mb-8">
+<div class="p-3 bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary" data-icon="shopping_bag">shopping_bag</span>
+</div>
+<span class="jb-mono text-[10px] text-on-surface-variant font-medium">SOURCE A</span>
+</div>
+<h3 class="syne-bold text-xl mb-2">Order Export</h3>
+<p class="text-sm text-on-surface-variant mb-6">Upload your Shopify, Magento, or custom store order export.</p>
+<!-- Status: Uploaded -->
+<div class="mt-auto bg-secondary/10 border border-secondary/20 p-6 rounded-lg flex items-start gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-primary text-sm" data-icon="check" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="flex-1 overflow-hidden">
+<p class="jb-mono text-xs font-bold text-secondary truncate">orders_oct.csv</p>
+<p class="jb-mono text-[10px] text-on-secondary-container/60 mt-1">1,284 rows identified</p>
+</div>
+<button class="text-secondary/40 hover:text-secondary transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="close">close</span>
+</button>
+</div>
+<div class="mt-6 flex items-center justify-between pt-6 border-t border-outline-variant/20">
+<div class="flex flex-col gap-1">
+<span class="jb-mono text-[10px] uppercase text-outline">Formats</span>
+<span class="text-xs font-medium">CSV, XLSX</span>
+</div>
+<a class="text-xs text-primary font-bold hover:underline underline-offset-4 flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+                    Sample File
+                </a>
+</div>
+</div>
+<!-- Zone 2: Courier Remittance -->
+<div class="bg-white/90 backdrop-blur-sm p-8 rounded-xl flex flex-col h-full group border border-black/5 hover:border-black/10 transition-all duration-300">
+<div class="flex items-center justify-between mb-8">
+<div class="p-3 bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary" data-icon="local_shipping">local_shipping</span>
+</div>
+<span class="jb-mono text-[10px] text-on-surface-variant font-medium">SOURCE B</span>
+</div>
+<h3 class="syne-bold text-xl mb-2">Courier Remittance</h3>
+<p class="text-sm text-on-surface-variant mb-6">Upload the billing statement or remittance file from your courier.</p>
+<!-- Status: Uploaded -->
+<div class="mt-auto bg-secondary/10 border border-secondary/20 p-6 rounded-lg flex items-start gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-primary text-sm" data-icon="check" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="flex-1 overflow-hidden">
+<p class="jb-mono text-xs font-bold text-secondary truncate">remittance_nov_final.csv</p>
+<p class="jb-mono text-[10px] text-on-secondary-container/60 mt-1">1,284 rows identified</p>
+</div>
+<button class="text-secondary/40 hover:text-secondary transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="close">close</span>
+</button>
+</div>
+<div class="mt-6 flex items-center justify-between pt-6 border-t border-outline-variant/20">
+<div class="flex flex-col gap-1">
+<span class="jb-mono text-[10px] uppercase text-outline">Formats</span>
+<span class="text-xs font-medium">CSV, XLSX</span>
+</div>
+<a class="text-xs text-primary font-bold hover:underline underline-offset-4 flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+                    Sample File
+                </a>
+</div>
+</div>
+</div>
+<!-- CTA Action -->
+<div class="flex flex-col items-center gap-4">
+<button class="group relative px-12 py-5 bg-black text-white rounded-md overflow-hidden transition-all active:scale-95 shadow-xl shadow-black/20">
+<span class="relative z-10 syne-bold text-sm tracking-widest uppercase flex items-center gap-3">
+                Run reconciliation
+                <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</span>
+</button>
+<p class="jb-mono text-[10px] text-white/60">Both sources matched. Ready to analyze 2,568 data points.</p>
+</div>
+</main>
+<!-- Side Decoration -->
+<div class="hidden lg:block fixed left-8 bottom-8 pointer-events-none">
+<div class="flex items-center gap-4 rotate-[-90deg] origin-left">
+<span class="jb-mono text-[10px] text-white/40 uppercase tracking-widest">Archive Ref: REC-2023-11</span>
+<div class="h-px w-24 bg-white/20"></div>
+</div>
+</div>
+</div>
+</body></html>

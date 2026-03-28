@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Suede Ledger - Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&amp;family=DM+Sans:wght@400;500;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Epilogue:wght@700&amp;family=Plus+Jakarta+Sans:wght@400;500;600&amp;family=Space+Grotesk:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary-fixed": "#ffddb7",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#efeeea",
+                        "on-primary": "#ffffff",
+                        "outline-variant": "#dec0bb",
+                        "secondary-fixed-dim": "#67dbae",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed": "#85f8c9",
+                        "on-secondary-fixed-variant": "#00513a",
+                        "tertiary-fixed-dim": "#ffb95e",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "tertiary": "#815100",
+                        "on-primary-fixed-variant": "#842418",
+                        "surface-container-highest": "#e4e2de",
+                        "primary-fixed": "#ffdad4",
+                        "inverse-primary": "#ffb4a7",
+                        "secondary-container": "#82f5c6",
+                        "secondary": "#006c4e",
+                        "on-tertiary-fixed": "#2a1700",
+                        "primary-container": "#c15140",
+                        "surface": "#fbf9f5",
+                        "on-primary-container": "#fffbff",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#30312e",
+                        "surface-bright": "#fbf9f5",
+                        "on-secondary-fixed": "#002115",
+                        "on-tertiary-container": "#fffbff",
+                        "surface-variant": "#e4e2de",
+                        "surface-tint": "#a43c2d",
+                        "error": "#ba1a1a",
+                        "background": "#fbf9f5",
+                        "primary-fixed-dim": "#ffb4a7",
+                        "on-surface": "#1b1c1a",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#400100",
+                        "primary": "#a1392a",
+                        "surface-dim": "#dbdad6",
+                        "on-background": "#1b1c1a",
+                        "inverse-on-surface": "#f2f0ed",
+                        "surface-container-low": "#f5f3ef",
+                        "surface-container-high": "#eae8e4",
+                        "outline": "#8a716d",
+                        "on-surface-variant": "#57423e",
+                        "on-secondary-container": "#007151",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#a36700"
+                    },
+                    fontFamily: {
+                        "headline": ["Syne", "Epilogue"],
+                        "body": ["DM Sans", "Plus Jakarta Sans"],
+                        "label": ["JetBrains Mono", "Space Grotesk"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #fbf9f5;
+            background-image: radial-gradient(circle at 1px 1px, rgba(222, 192, 187, 0.15) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .syne-tight {
+            font-family: 'Syne', sans-serif;
+            letter-spacing: -0.02em;
+        }
+    </style>
+</head>
+<body class="font-body text-on-surface flex min-h-screen">
+<!-- Sidebar Navigation Shell -->
+<aside class="hidden md:flex flex-col h-screen w-64 bg-[#fbf9f5] dark:bg-stone-950 py-8 px-4 space-y-6 sticky top-0 shrink-0">
+<div class="mb-10 px-2">
+<h1 class="text-2xl font-black text-orange-900 dark:text-orange-600 syne-tight">Suede Ledger</h1>
+<p class="font-label text-xs uppercase tracking-widest text-stone-400 mt-1">Financial Integrity</p>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-stone-500 hover:bg-stone-100 transition-all group active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label text-sm">Overview</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-stone-500 hover:bg-stone-100 transition-all group active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label text-sm">Transactions</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-stone-500 hover:bg-stone-100 transition-all group active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+<span class="font-label text-sm">Anomalies</span>
+</a>
+<!-- Active State: Settings -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-orange-800 font-bold border-r-2 border-orange-800 bg-stone-100/50 transition-all group" href="#">
+<span class="material-symbols-outlined" data-icon="settings" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-label text-sm">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-2">
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-white py-3 rounded-md font-headline text-xs uppercase tracking-wider shadow-sm hover:brightness-110 active:scale-95 transition-all">
+                New Reconciliation
+            </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col min-w-0">
+<!-- TopAppBar Shell -->
+<header class="flex justify-between items-center w-full px-8 py-6 bg-stone-100/50 backdrop-blur-md sticky top-0 z-10">
+<div class="flex items-center gap-4">
+<span class="font-label text-[10px] uppercase tracking-widest text-primary font-bold">Workspace / Settings</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:flex items-center bg-surface-container-low px-4 py-2 rounded-full w-64">
+<span class="material-symbols-outlined text-stone-400 text-lg" data-icon="search">search</span>
+<input class="bg-transparent border-none text-sm focus:ring-0 placeholder-stone-400 font-body w-full" placeholder="Search preference..." type="text"/>
+</div>
+<div class="flex items-center gap-3">
+<button class="material-symbols-outlined text-stone-500 hover:text-orange-800 transition-colors" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-stone-500 hover:text-orange-800 transition-colors" data-icon="help">help</button>
+<div class="h-8 w-8 rounded-full bg-surface-container-highest overflow-hidden">
+<img alt="User Profile" class="h-full w-full object-cover" data-alt="professional portrait of a financial executive in a minimalist studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgH0PbUhDCqkrFboAT147kfR7qoM2nqiV-DOxo52Iu7-4Q_k6gDcS56VuMqwn3hXJGFKXx5gWJSNdR-Eh6_J4cIbqZ2QqacEai95IoIYRf7v5DMkNuk6UtbEpD-nXle4tYfuhSJLhygIhXlF0VlKmoAkhuewoARi3E_sEQ1Ty6xbGAMXWKtv3M1Q9WWtck--n0jvH0Cf84a7Z_zz1sqOJy_MvZzQFDvcAwuLi44J7GqW0X75TETGKMC62fEsbxf1BfIxYxC_vz9mE"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Editorial Content -->
+<div class="p-8 md:p-12 max-w-6xl w-full mx-auto space-y-20">
+<!-- Page Header -->
+<section class="space-y-2">
+<h2 class="syne-tight text-5xl font-extrabold text-on-surface leading-tight">System Configuration</h2>
+<p class="text-on-surface-variant max-w-xl text-lg">Adjust your personal identity, organizational standards, and high-frequency data connections.</p>
+</section>
+<!-- Grid Layout for Settings Sections -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+<!-- Sidebar Anchor (Nav Desktop) -->
+<nav class="lg:col-span-3 space-y-8 hidden lg:block">
+<div>
+<span class="font-label text-[10px] uppercase tracking-[0.2em] text-stone-400 block mb-4">Personal</span>
+<ul class="space-y-3">
+<li><a class="text-primary font-bold text-sm block" href="#profile">Profile</a></li>
+<li><a class="text-stone-500 hover:text-primary transition-colors text-sm block" href="#security">Security &amp; Auth</a></li>
+</ul>
+</div>
+<div>
+<span class="font-label text-[10px] uppercase tracking-[0.2em] text-stone-400 block mb-4">Organization</span>
+<ul class="space-y-3">
+<li><a class="text-stone-500 hover:text-primary transition-colors text-sm block" href="#api">API Infrastructure</a></li>
+<li><a class="text-stone-500 hover:text-primary transition-colors text-sm block" href="#carriers">Connected Carriers</a></li>
+</ul>
+</div>
+</nav>
+<!-- Forms Column -->
+<div class="lg:col-span-9 space-y-24">
+<!-- Profile Section -->
+<section class="scroll-mt-32" id="profile">
+<div class="flex items-baseline gap-4 mb-10">
+<span class="font-label text-sm text-primary">01.</span>
+<h3 class="syne-tight text-3xl font-bold">Profile Identity</h3>
+</div>
+<div class="bg-surface-container-low p-8 rounded-xl space-y-8">
+<div class="flex flex-col md:flex-row gap-8 items-start">
+<div class="relative group">
+<div class="w-24 h-24 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border-4 border-white shadow-sm">
+<img class="w-full h-full object-cover" data-alt="close-up portrait of a man in a beige linen shirt against a cream wall" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRds2c4J_wTy39XX1pLLs3SvnA-gLIvxDQJU8oocee3PuL048nC3zYrQ-ABGGKktLm35E_AcOyA0HIlm885QoC_AwYgkLJp9azS0ScZJxiey8nJTE_tv87Fl247bXmFhjz9KPQ7bNkWM3RMYa9-Mf4agbSuE-GIfP1_XyqhOh2ONUCBlqL7r4jeulXaBpm8WcuWdPlzzSl-DJnBARg3Hv5XftDmtsMfMyWaQLHwakOCSJ8uZEV7-Uyry3gNX7qRvBiXbRLF9xEJH8"/>
+</div>
+<button class="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full shadow-lg active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-sm" data-icon="edit">edit</span>
+</button>
+</div>
+<div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+<div class="space-y-2">
+<label class="font-label text-[10px] uppercase tracking-widest text-stone-500 block">Full Legal Name</label>
+<input class="w-full bg-surface-container-lowest border-none rounded-md p-3 font-body focus:ring-1 focus:ring-primary transition-all" type="text" value="Alexander Sterling"/>
+</div>
+<div class="space-y-2">
+<label class="font-label text-[10px] uppercase tracking-widest text-stone-500 block">Professional Email</label>
+<input class="w-full bg-surface-container-lowest border-none rounded-md p-3 font-body focus:ring-1 focus:ring-primary transition-all" type="email" value="alex@reconcile.ly"/>
+</div>
+<div class="space-y-2 md:col-span-2">
+<label class="font-label text-[10px] uppercase tracking-widest text-stone-500 block">Timezone Alignment</label>
+<select class="w-full bg-surface-container-lowest border-none rounded-md p-3 font-body focus:ring-1 focus:ring-primary appearance-none">
+<option>Pacific Standard Time (PST) - UTC-8</option>
+<option>Eastern Standard Time (EST) - UTC-5</option>
+<option>Greenwich Mean Time (GMT) - UTC+0</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Security Section -->
+<section class="scroll-mt-32" id="security">
+<div class="flex items-baseline gap-4 mb-10">
+<span class="font-label text-sm text-primary">02.</span>
+<h3 class="syne-tight text-3xl font-bold">Security Protocols</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- 2FA Card -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/20 shadow-sm flex flex-col justify-between">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="verified_user">verified_user</span>
+<h4 class="font-headline font-bold">Two-Factor Auth</h4>
+</div>
+<p class="text-sm text-on-surface-variant">Secure your account with an additional verification layer via authenticator app.</p>
+</div>
+<div class="mt-8 flex items-center justify-between">
+<span class="bg-secondary/10 text-secondary font-label text-[10px] px-2 py-1 rounded uppercase font-bold">Enabled</span>
+<button class="text-primary text-xs font-bold font-label uppercase hover:underline">Revoke Access</button>
+</div>
+</div>
+<!-- Sessions Card -->
+<div class="bg-surface-container-low p-6 rounded-xl flex flex-col justify-between">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-stone-500" data-icon="devices">devices</span>
+<h4 class="font-headline font-bold">Active Sessions</h4>
+</div>
+<p class="text-sm text-on-surface-variant">Currently signed in on 3 devices across San Francisco and London.</p>
+</div>
+<div class="mt-8">
+<button class="text-stone-500 text-xs font-bold font-label uppercase hover:text-on-surface transition-colors flex items-center gap-2">
+                                        Manage Devices <span class="material-symbols-outlined text-xs" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- API Keys Section -->
+<section class="scroll-mt-32" id="api">
+<div class="flex items-baseline gap-4 mb-10">
+<span class="font-label text-sm text-primary">03.</span>
+<h3 class="syne-tight text-3xl font-bold">API Infrastructure</h3>
+</div>
+<div class="bg-surface-container-low rounded-xl overflow-hidden">
+<table class="w-full text-left">
+<thead class="bg-surface-container-high">
+<tr>
+<th class="px-6 py-4 font-label text-[10px] uppercase tracking-widest text-stone-500">Key Name</th>
+<th class="px-6 py-4 font-label text-[10px] uppercase tracking-widest text-stone-500">Token ID</th>
+<th class="px-6 py-4 font-label text-[10px] uppercase tracking-widest text-stone-500 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<tr>
+<td class="px-6 py-5 font-bold text-sm">Production_Webhook_01</td>
+<td class="px-6 py-5 font-label text-xs text-stone-400">sk_live_••••••••39a2</td>
+<td class="px-6 py-5 text-right">
+<button class="material-symbols-outlined text-stone-400 hover:text-error transition-colors" data-icon="delete">delete</button>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-5 font-bold text-sm">Testing_Sandbox</td>
+<td class="px-6 py-5 font-label text-xs text-stone-400">sk_test_••••••••f921</td>
+<td class="px-6 py-5 text-right">
+<button class="material-symbols-outlined text-stone-400 hover:text-error transition-colors" data-icon="delete">delete</button>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="p-6 bg-surface-container-highest/30">
+<button class="flex items-center gap-2 text-primary font-headline text-xs uppercase tracking-widest font-bold">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span> Generate New API Key
+                                </button>
+</div>
+</div>
+</section>
+<!-- Connected Carriers Section -->
+<section class="scroll-mt-32" id="carriers">
+<div class="flex items-baseline gap-4 mb-10">
+<span class="font-label text-sm text-primary">04.</span>
+<h3 class="syne-tight text-3xl font-bold">Connected Carriers</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Carrier: Stripe -->
+<div class="p-5 bg-surface-container-lowest rounded-xl flex items-center justify-between group hover:shadow-md transition-shadow">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-xl">S</div>
+<div>
+<h5 class="font-bold">Stripe</h5>
+<p class="text-[10px] font-label text-secondary uppercase">Connected · Real-time</p>
+</div>
+</div>
+<button class="material-symbols-outlined text-stone-300 group-hover:text-stone-600" data-icon="settings">settings</button>
+</div>
+<!-- Carrier: Shopify -->
+<div class="p-5 bg-surface-container-lowest rounded-xl flex items-center justify-between group hover:shadow-md transition-shadow">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-green-600 flex items-center justify-center text-white font-bold text-xl">Sh</div>
+<div>
+<h5 class="font-bold">Shopify</h5>
+<p class="text-[10px] font-label text-secondary uppercase">Connected · 2m ago</p>
+</div>
+</div>
+<button class="material-symbols-outlined text-stone-300 group-hover:text-stone-600" data-icon="settings">settings</button>
+</div>
+<!-- Carrier: FedEx -->
+<div class="p-5 bg-surface-container-lowest rounded-xl flex items-center justify-between group hover:shadow-md transition-shadow">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-orange-600 flex items-center justify-center text-white font-bold text-xl">Fx</div>
+<div>
+<h5 class="font-bold">FedEx</h5>
+<p class="text-[10px] font-label text-orange-800 uppercase">Action Required</p>
+</div>
+</div>
+<button class="material-symbols-outlined text-stone-300 group-hover:text-stone-600" data-icon="warning">warning</button>
+</div>
+<!-- Add New -->
+<button class="p-5 border-2 border-dashed border-stone-200 rounded-xl flex items-center justify-center gap-3 hover:bg-white hover:border-primary transition-all group">
+<span class="material-symbols-outlined text-stone-400 group-hover:text-primary" data-icon="add_circle">add_circle</span>
+<span class="font-label text-xs uppercase tracking-widest text-stone-500 group-hover:text-primary">Add New Carrier</span>
+</button>
+</div>
+</section>
+</div>
+</div>
+</div>
+<!-- Sticky Footer Action -->
+<footer class="mt-auto p-8 border-t border-outline-variant/10 bg-surface/80 backdrop-blur-sm sticky bottom-0 z-10">
+<div class="max-w-6xl mx-auto flex justify-end gap-4">
+<button class="px-6 py-3 font-headline text-xs uppercase tracking-widest text-on-surface-variant hover:text-on-surface transition-colors">Discard Changes</button>
+<button class="bg-gradient-to-br from-primary to-primary-container text-white px-8 py-3 rounded-md font-headline text-xs uppercase tracking-widest shadow-lg shadow-primary/20 active:scale-95 transition-all">
+                    Save Configuration
+                </button>
+</div>
+</footer>
+</main>
+<!-- Bottom Navigation (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-[#fbf9f5] flex justify-around items-center py-4 px-6 z-50 border-t border-stone-200/20">
+<a class="flex flex-col items-center gap-1 text-stone-500" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-stone-500" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-orange-800" href="#">
+<span class="material-symbols-outlined" data-icon="settings" style="font-variation-settings: 'FILL' 1;">settings</span>
+</a>
+<div class="h-8 w-8 rounded-full bg-surface-container-highest overflow-hidden">
+<img class="h-full w-full object-cover" data-alt="professional portrait profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwQzKootXR5IQ16xr7B5JqsIGWJgfsP3U8IrwTMr1jj5ZrkTYfs8E6LlsZTDtSPb9FCXBqhkc_dm8_5BjCsH0vFk7jfFeiGHfWW36AoGrWmGckMvL_K7BH-IOxRgScyFpm_Gv7zE_JeOEKBzVPN3WnR7oLHqTZCY0PtORj4LIuHSKqooURv3eISde2ybWdWvA6LAQUQpa5YeHpxdHGLbh8DkQsJYxpxTmyWZY0YdXi-JkRh0eYIubUpBHwoIxxXYQBZj7LJfj2nqk"/>
+</div>
+</nav>
+</body></html>

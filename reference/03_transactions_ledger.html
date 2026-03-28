@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&amp;family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;family=Epilogue:wght@400;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Space+Grotesk:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed": "#ffddb7",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "surface-container": "#efeeea",
+              "on-primary": "#ffffff",
+              "outline-variant": "#dec0bb",
+              "secondary-fixed-dim": "#67dbae",
+              "on-error-container": "#93000a",
+              "secondary-fixed": "#85f8c9",
+              "on-secondary-fixed-variant": "#00513a",
+              "tertiary-fixed-dim": "#ffb95e",
+              "on-tertiary-fixed-variant": "#653e00",
+              "tertiary": "#815100",
+              "on-primary-fixed-variant": "#842418",
+              "surface-container-highest": "#e4e2de",
+              "primary-fixed": "#ffdad4",
+              "inverse-primary": "#ffb4a7",
+              "secondary-container": "#82f5c6",
+              "secondary": "#006c4e",
+              "on-tertiary-fixed": "#2a1700",
+              "primary-container": "#c15140",
+              "surface": "#fbf9f5",
+              "on-primary-container": "#fffbff",
+              "on-error": "#ffffff",
+              "inverse-surface": "#30312e",
+              "surface-bright": "#fbf9f5",
+              "on-secondary-fixed": "#002115",
+              "on-tertiary-container": "#fffbff",
+              "surface-variant": "#e4e2de",
+              "surface-tint": "#a43c2d",
+              "error": "#ba1a1a",
+              "background": "#fbf9f5",
+              "primary-fixed-dim": "#ffb4a7",
+              "on-surface": "#1b1c1a",
+              "on-secondary": "#ffffff",
+              "on-primary-fixed": "#400100",
+              "primary": "#a1392a",
+              "surface-dim": "#dbdad6",
+              "on-background": "#1b1c1a",
+              "inverse-on-surface": "#f2f0ed",
+              "surface-container-low": "#f5f3ef",
+              "surface-container-high": "#eae8e4",
+              "outline": "#8a716d",
+              "on-surface-variant": "#57423e",
+              "on-secondary-container": "#007151",
+              "error-container": "#ffdad6",
+              "tertiary-container": "#a36700"
+            },
+            fontFamily: {
+              "headline": ["Syne", "sans-serif"],
+              "body": ["DM Sans", "sans-serif"],
+              "label": ["JetBrains Mono", "monospace"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .bg-grid {
+        background-size: 40px 40px;
+        background-image: 
+          linear-gradient(to right, rgba(222, 192, 187, 0.15) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(222, 192, 187, 0.15) 1px, transparent 1px);
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+      }
+    </style>
+</head>
+<body class="bg-background font-body text-on-background min-h-screen flex">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-screen w-64 bg-[#fbf9f5] dark:bg-stone-950 py-8 px-4 space-y-6 border-r border-stone-200/20 sticky top-0">
+<div class="mb-8">
+<h1 class="text-2xl font-black text-orange-900 dark:text-orange-600 font-headline">Suede Ledger</h1>
+<p class="text-[10px] font-label tracking-widest text-stone-500 uppercase mt-1">Financial Integrity</p>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 text-stone-500 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-900 transition-all rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label text-sm uppercase tracking-tight">Overview</span>
+</a>
+<!-- Active State: Transactions -->
+<a class="flex items-center gap-3 px-4 py-3 text-orange-800 dark:text-orange-400 font-bold border-r-2 border-orange-800 bg-stone-100/50 dark:bg-stone-900/50 rounded-l-lg transition-all scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label text-sm uppercase tracking-tight">Transactions</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-500 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-900 transition-all rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+<span class="font-label text-sm uppercase tracking-tight">Anomalies</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-500 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-900 transition-all rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label text-sm uppercase tracking-tight">Settings</span>
+</a>
+</nav>
+<div class="pt-6">
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-white font-headline font-bold py-3 rounded-md shadow-sm transition-transform active:scale-95 uppercase text-xs tracking-wider">
+                New Reconciliation
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 bg-grid relative overflow-x-hidden">
+<!-- TopNavBar -->
+<header class="sticky top-0 z-50 flex justify-between items-center w-full px-8 py-4 bg-[#fbf9f5]/80 backdrop-blur-md">
+<div class="flex items-center gap-6">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50" data-icon="search">search</span>
+<input class="bg-surface-container-low border-none rounded-md pl-10 pr-4 py-2 text-sm focus:ring-1 focus:ring-primary w-64 font-body" placeholder="Search Ledger..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-surface-container-highest flex items-center justify-center border border-outline-variant/20 overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="Portrait of a professional financial analyst avatar with glasses and a friendly expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6m15iGj1UXYjnvfUUcs-Q29r194PgVzi5y20PFb4lIlfr-EoMbPBRy0arhXqR2gwZfpubGcuPwBYq2HRveQL5Qj2tW07gLH2ywasUNN6HaxZCC3N8ZGMOwlh5ZfYfpUwyywvzFC_nTkK3Y5eqb7c6PoiXlmydQkmdUbk4XquBq4wyUZl0wUyzBZDsLu6b8y4SPDxr6YXz4Disz8lpOZm6umn9HdBRXH1GRYVBx_kRPWW5uwvGBYszVajW8IkPuT7oi2IfHB_US3w"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-8 max-w-7xl mx-auto">
+<!-- Header Section -->
+<div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<span class="font-label text-xs text-primary uppercase tracking-widest mb-2 block">Ledger Explorer</span>
+<h2 class="text-5xl font-headline font-extrabold tracking-tighter text-on-surface leading-none">Transactions</h2>
+<p class="text-on-surface-variant mt-4 max-w-md font-body">Detailed log of all financial movements across active connected nodes and external gateways.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container-low hover:bg-surface-container-high transition-colors text-on-surface-variant font-label text-xs uppercase tracking-tight rounded-md">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+                        Filters
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container-low hover:bg-surface-container-high transition-colors text-on-surface-variant font-label text-xs uppercase tracking-tight rounded-md">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+                        Export .CSV
+                    </button>
+</div>
+</div>
+<!-- Transaction Table Section -->
+<div class="glass-card rounded-xl overflow-hidden border border-outline-variant/10 shadow-sm">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/50">
+<th class="px-6 py-4 font-label text-[10px] uppercase tracking-widest text-on-surface-variant/70">Date</th>
+<th class="px-6 py-4 font-label text-[10px] uppercase tracking-widest text-on-surface-variant/70">Transaction ID</th>
+<th class="px-6 py-4 font-label text-[10px] uppercase tracking-widest text-on-surface-variant/70">Source</th>
+<th class="px-6 py-4 font-label text-[10px] uppercase tracking-widest text-on-surface-variant/70 text-right">Amount</th>
+<th class="px-6 py-4 font-label text-[10px] uppercase tracking-widest text-on-surface-variant/70 text-center">Status</th>
+<th class="px-6 py-4 font-label text-[10px] uppercase tracking-widest text-on-surface-variant/70"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-6 py-5 font-label text-xs">2023.10.24</td>
+<td class="px-6 py-5 font-label text-xs text-primary font-medium tracking-tight">TRX-9428-BLX</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-sm bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-sm" data-icon="account_balance">account_balance</span>
+</div>
+<span class="text-sm font-medium text-on-surface">Stripe Gateway</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right font-label text-sm text-on-surface">$12,450.00</td>
+<td class="px-6 py-5 text-center">
+<span class="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-[10px] font-label uppercase font-bold tracking-widest">Matched</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-6 py-5 font-label text-xs">2023.10.24</td>
+<td class="px-6 py-5 font-label text-xs text-primary font-medium tracking-tight">TRX-0012-KLP</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-sm bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-sm" data-icon="shopping_cart">shopping_cart</span>
+</div>
+<span class="text-sm font-medium text-on-surface">Shopify App Store</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right font-label text-sm text-on-surface">$890.12</td>
+<td class="px-6 py-5 text-center">
+<span class="px-3 py-1 bg-tertiary-container/10 text-tertiary-container rounded-full text-[10px] font-label uppercase font-bold tracking-widest">Pending</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-6 py-5 font-label text-xs">2023.10.23</td>
+<td class="px-6 py-5 font-label text-xs text-primary font-medium tracking-tight">TRX-7731-MNO</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-sm bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-sm" data-icon="payments">payments</span>
+</div>
+<span class="text-sm font-medium text-on-surface">Bank Transfer (CHASE)</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right font-label text-sm text-on-surface">$55,000.00</td>
+<td class="px-6 py-5 text-center">
+<span class="px-3 py-1 bg-error/10 text-error rounded-full text-[10px] font-label uppercase font-bold tracking-widest">Anomaly</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-6 py-5 font-label text-xs">2023.10.23</td>
+<td class="px-6 py-5 font-label text-xs text-primary font-medium tracking-tight">TRX-2290-TYP</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-sm bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-sm" data-icon="account_balance_wallet">account_balance_wallet</span>
+</div>
+<span class="text-sm font-medium text-on-surface">PayPal Business</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right font-label text-sm text-on-surface">$2,340.55</td>
+<td class="px-6 py-5 text-center">
+<span class="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-[10px] font-label uppercase font-bold tracking-widest">Matched</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-6 py-5 font-label text-xs">2023.10.22</td>
+<td class="px-6 py-5 font-label text-xs text-primary font-medium tracking-tight">TRX-1123-RQS</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-sm bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-sm" data-icon="language">language</span>
+</div>
+<span class="text-sm font-medium text-on-surface">Adyen International</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right font-label text-sm text-on-surface">$102,900.00</td>
+<td class="px-6 py-5 text-center">
+<span class="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-[10px] font-label uppercase font-bold tracking-widest">Matched</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div class="px-6 py-4 flex items-center justify-between bg-surface-container-low/30 border-t border-outline-variant/5">
+<span class="font-label text-xs text-on-surface-variant">Showing 1-15 of 24,902 transactions</span>
+<div class="flex gap-1">
+<button class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-md bg-primary text-white font-label text-xs">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-surface-container font-label text-xs text-on-surface-variant">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-surface-container font-label text-xs text-on-surface-variant">3</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Contextual Bento Grid Summary -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+<!-- Highlight Card 1 -->
+<div class="bg-surface-container-low p-6 rounded-xl flex flex-col justify-between h-48 group hover:bg-surface-container-high transition-all">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-secondary/10 text-secondary rounded-md">
+<span class="material-symbols-outlined" data-icon="task_alt">task_alt</span>
+</div>
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Last 24h</span>
+</div>
+<div>
+<h4 class="text-4xl font-headline font-bold text-on-surface">99.2%</h4>
+<p class="text-xs font-label text-secondary uppercase mt-1">Accuracy Match Rate</p>
+</div>
+</div>
+<!-- Highlight Card 2 -->
+<div class="bg-surface-container-low p-6 rounded-xl flex flex-col justify-between h-48 group hover:bg-surface-container-high transition-all">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-primary/10 text-primary rounded-md">
+<span class="material-symbols-outlined" data-icon="emergency_home">emergency_home</span>
+</div>
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Alerts</span>
+</div>
+<div>
+<h4 class="text-4xl font-headline font-bold text-on-surface">14</h4>
+<p class="text-xs font-label text-primary uppercase mt-1">Pending Anomalies</p>
+</div>
+</div>
+<!-- Highlight Card 3 -->
+<div class="bg-surface-container-low p-6 rounded-xl flex flex-col justify-between h-48 group hover:bg-surface-container-high transition-all overflow-hidden relative">
+<div class="flex justify-between items-start relative z-10">
+<div class="p-2 bg-on-surface-variant/10 text-on-surface-variant rounded-md">
+<span class="material-symbols-outlined" data-icon="query_stats">query_stats</span>
+</div>
+<span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest">Volume</span>
+</div>
+<div class="relative z-10">
+<h4 class="text-4xl font-headline font-bold text-on-surface">$2.4M</h4>
+<p class="text-xs font-label text-on-surface-variant uppercase mt-1">Daily Thruput</p>
+</div>
+<!-- Decorative Background Image -->
+<div class="absolute inset-0 opacity-5 pointer-events-none">
+<img class="w-full h-full object-cover" data-alt="Abstract minimalist line art representing financial growth and data flow in muted terracotta tones on a cream background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcGqRg5J_y1DkRo8GxYaU4nsbF9KsLqNxL8IvC61Y__AdZTRjAYapFGHDjuRzlUa0_fQryYcXQh_yNp-A5l7VPjqxQMhTb7qGSulQic9SldulhaIusrww2mihzOj-yJqr6Abu73L0GFapqVglSfcY-dUvBuoEYlC5_iCVQeXNwpXUETFu0bXlutRBzwk8o6FvEi4ujXD-9yxi_LdYlN1kxaMMK6JGJKPmJobw7XUE4IkMrDtNcOjo50MYtMwgJ5OFVbO5GVOknZBs"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Note -->
+<footer class="mt-20 px-8 py-12 border-t border-outline-variant/10">
+<div class="flex flex-col md:flex-row justify-between items-center gap-6 opacity-40 grayscale">
+<span class="font-headline font-bold text-xl tracking-tighter">Suede Ledger</span>
+<div class="flex gap-8 font-label text-[10px] uppercase tracking-widest">
+<a class="hover:text-primary transition-colors" href="#">System Status: Operational</a>
+<a class="hover:text-primary transition-colors" href="#">Privacy Protocol</a>
+<a class="hover:text-primary transition-colors" href="#">API Documentation</a>
+</div>
+</div>
+</footer>
+</main>
+<!-- Mobile Navigation (visible on md:hidden) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface/90 backdrop-blur-lg border-t border-outline-variant/10 px-6 py-4 flex justify-around items-center z-[100]">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="dashboard">dashboard</span>
+<span class="material-symbols-outlined text-primary" data-icon="receipt_long">receipt_long</span>
+<div class="w-12 h-12 -mt-10 bg-primary rounded-full flex items-center justify-center shadow-lg border-4 border-surface">
+<span class="material-symbols-outlined text-white" data-icon="add">add</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="warning">warning</span>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="settings">settings</span>
+</nav>
+</body></html>

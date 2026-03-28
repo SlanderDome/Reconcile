@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reconcile.ly - Integrity Gaps</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&amp;family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Epilogue:wght@700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary": "#815100",
+              "tertiary-container": "#a36700",
+              "on-secondary-fixed-variant": "#00513a",
+              "error-container": "#ffdad6",
+              "secondary-fixed": "#85f8c9",
+              "on-secondary": "#ffffff",
+              "secondary": "#006c4e",
+              "primary-fixed": "#ffdad4",
+              "background": "#fbf9f5",
+              "primary-container": "#c15140",
+              "inverse-on-surface": "#f2f0ed",
+              "on-error": "#ffffff",
+              "on-surface": "#1b1c1a",
+              "error": "#ba1a1a",
+              "inverse-surface": "#30312e",
+              "on-secondary-fixed": "#002115",
+              "on-secondary-container": "#007151",
+              "inverse-primary": "#ffb4a7",
+              "secondary-container": "#82f5c6",
+              "on-error-container": "#93000a",
+              "surface-container-high": "#eae8e4",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-primary-container": "#fffbff",
+              "on-primary": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "surface-variant": "#e4e2de",
+              "secondary-fixed-dim": "#67dbae",
+              "surface-container": "#efeeea",
+              "primary-fixed-dim": "#ffb4a7",
+              "on-tertiary-container": "#fffbff",
+              "tertiary-fixed-dim": "#ffb95e",
+              "surface-tint": "#a43c2d",
+              "surface": "#fbf9f5",
+              "surface-dim": "#dbdad6",
+              "surface-container-low": "#f5f3ef",
+              "surface-container-highest": "#e4e2de",
+              "on-background": "#1b1c1a",
+              "surface-bright": "#fbf9f5",
+              "tertiary-fixed": "#ffddb7",
+              "on-surface-variant": "#57423e",
+              "outline-variant": "#dec0bb",
+              "primary": "#a1392a",
+              "surface-container-lowest": "#ffffff",
+              "outline": "#8a716d",
+              "on-primary-fixed": "#400100",
+              "on-primary-fixed-variant": "#842418",
+              "on-tertiary-fixed": "#2a1700"
+            },
+            fontFamily: {
+              "headline": ["Syne", "Epilogue", "sans-serif"],
+              "body": ["DM Sans", "Plus Jakarta Sans", "sans-serif"],
+              "label": ["JetBrains Mono", "Space Grotesk", "monospace"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(222, 192, 187, 0.15) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(222, 192, 187, 0.15) 1px, transparent 1px);
+        }
+        .suede-depth {
+            box-shadow: 0px 4px 20px rgba(87, 66, 62, 0.04), 0px 10px 40px rgba(87, 66, 62, 0.06);
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-surface flex min-h-screen">
+<!-- SideNavBar Component -->
+<aside class="flex flex-col h-screen w-64 py-8 px-6 space-y-8 bg-[#fbf9f5] dark:bg-[#1a1917] border-r-0 fixed left-0 top-0 z-50">
+<div class="flex flex-col space-y-1">
+<span class="text-2xl font-bold tracking-tighter text-[#a1392a] dark:text-[#c15140] font-headline">Reconcile.ly</span>
+<span class="text-[10px] font-label uppercase tracking-widest text-stone-500">The Suede Ledger</span>
+</div>
+<nav class="flex-1 space-y-2">
+<!-- Overview -->
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-stone-500 dark:text-stone-400 font-medium hover:text-[#a1392a] dark:hover:text-[#c15140] transition-colors hover:bg-[#f2efe9] dark:hover:bg-[#2a2824]" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-sm font-label">Overview</span>
+</a>
+<!-- Transactions -->
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-stone-500 dark:text-stone-400 font-medium hover:text-[#a1392a] dark:hover:text-[#c15140] transition-colors hover:bg-[#f2efe9] dark:hover:bg-[#2a2824]" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="text-sm font-label">Transactions</span>
+</a>
+<!-- Anomalies (ACTIVE) -->
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-[#a1392a] dark:text-[#c15140] font-bold bg-[#fbf9f5] dark:bg-[#1a1917] shadow-[inset_0_4px_20px_rgba(87,66,62,0.04)] active:scale-[0.98] transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="warning" style="font-variation-settings: 'FILL' 1;">warning</span>
+<span class="text-sm font-label">Anomalies</span>
+</a>
+<!-- Settings -->
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-stone-500 dark:text-stone-400 font-medium hover:text-[#a1392a] dark:hover:text-[#c15140] transition-colors hover:bg-[#f2efe9] dark:hover:bg-[#2a2824]" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-sm font-label">Settings</span>
+</a>
+</nav>
+<div class="pt-6 border-t border-outline-variant/20">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="professional portrait of a financial controller in a minimalist office setting with warm natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCfKn-1qGirLnICdse7e3HJ1d_p2-_oG4jPPoCcbi4ojPNB9OOHU8aX5-R5Sy518-mE4HK7kAG7MX-xXWlYc5PE5RGdCPzjHlG5ONTnCwK0bN6pDdGJM8AvP2IvhWQ-07uc6XxGojFw1nHGorttWRX05MxOX9JhqQaplInmHfOX41mleX_nrxg3Wr2gw2_FmGX22dFWu5n2IZ0gQfFnIEhhd8atC-ESibZzvw0CCJO68v8Zhq0vPLGr4v_Ev6jPhB2UNl5bJEG17E"/>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-bold font-headline">Alex Chen</span>
+<span class="text-[10px] font-label text-stone-500">Senior Auditor</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="flex-1 ml-64 bg-grid relative min-h-screen">
+<!-- TopAppBar Component -->
+<header class="flex justify-between items-center w-full px-8 py-4 bg-[#fbf9f5]/80 dark:bg-[#1a1917]/80 backdrop-blur-xl sticky top-0 z-40">
+<div class="flex items-center gap-4">
+<span class="text-sm font-label text-stone-400">Ledger / Anomalies</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative hidden md:block">
+<input class="bg-surface-container-low border-none rounded-lg py-2 pl-10 pr-4 text-sm font-label focus:ring-2 focus:ring-primary w-64 placeholder:text-stone-400" placeholder="Search integrity gaps..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-stone-400 text-sm" data-icon="search">search</span>
+</div>
+<div class="flex items-center gap-4 text-[#a1392a] dark:text-[#c15140]">
+<button class="hover:opacity-70 transition-opacity active:scale-[0.98]">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="hover:opacity-70 transition-opacity active:scale-[0.98]">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Content Shell -->
+<section class="p-12 max-w-7xl mx-auto space-y-12">
+<!-- Page Header -->
+<div class="space-y-2">
+<div class="flex items-center gap-2">
+<div class="h-[2px] w-8 bg-primary"></div>
+<span class="font-label text-xs tracking-[0.2em] text-primary uppercase font-bold">Audit Alert</span>
+</div>
+<h1 class="text-6xl font-headline tracking-tighter text-on-surface">Integrity Gaps</h1>
+<p class="max-w-2xl text-on-surface-variant font-body leading-relaxed">
+                    Automated reconciliation detected 12 discrepancies requiring manual resolution. Discontinuities in the ledger represent high-priority risk vectors.
+                </p>
+</div>
+<!-- Bento Grid of Anomalies -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Priority Anomaly 1 -->
+<div class="lg:col-span-2 bg-surface-container-lowest p-8 rounded-xl suede-depth space-y-6 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4">
+<span class="text-[100px] font-headline font-extrabold text-primary/5 select-none leading-none">01</span>
+</div>
+<div class="flex justify-between items-start">
+<div class="space-y-1">
+<span class="bg-error-container text-on-error-container px-2 py-0.5 rounded text-[10px] font-label font-bold uppercase tracking-wider">Critical Mismatch</span>
+<h3 class="text-2xl font-headline">Stripe API Gateway Timeout</h3>
+</div>
+<div class="text-right">
+<span class="text-4xl font-headline text-primary tracking-tight">-$12,450.00</span>
+<p class="text-[10px] font-label text-stone-400">UNMATCHED INFLOW</p>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-8 py-6 border-y border-outline-variant/10">
+<div class="space-y-1">
+<p class="text-[10px] font-label uppercase text-stone-400">ID</p>
+<p class="font-label text-sm font-bold">#STR-9921-X</p>
+</div>
+<div class="space-y-1">
+<p class="text-[10px] font-label uppercase text-stone-400">Entity</p>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-stone-600" data-icon="account_balance">account_balance</span>
+<p class="font-label text-sm font-bold">Stripe Connect</p>
+</div>
+</div>
+<div class="space-y-1">
+<p class="text-[10px] font-label uppercase text-stone-400">Timestamp</p>
+<p class="font-label text-sm font-bold">Oct 24, 08:12</p>
+</div>
+<div class="space-y-1">
+<p class="text-[10px] font-label uppercase text-stone-400">Status</p>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<p class="font-label text-sm font-bold text-error">Unreconciled</p>
+</div>
+</div>
+</div>
+<div class="flex justify-between items-center pt-2">
+<p class="text-xs font-body italic text-stone-500 max-w-md">The transaction was authorized but the ledger didn't receive the 'payment_intent.succeeded' webhook.</p>
+<button class="bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline text-xs px-6 py-3 rounded-lg hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-primary/20 tracking-widest uppercase">
+                            Resolve
+                        </button>
+</div>
+</div>
+<!-- Secondary Metric / Summary -->
+<div class="bg-surface-container-low p-8 rounded-xl space-y-8 flex flex-col justify-between">
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<span class="font-headline text-lg">Risk Score</span>
+<span class="font-label text-error font-bold text-xl">High (84)</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[84%]"></div>
+</div>
+</div>
+<div class="space-y-6">
+<div class="flex items-center justify-between group cursor-pointer">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="cloud_off">cloud_off</span>
+<span class="font-label text-sm">Provider Sync Lag</span>
+</div>
+<span class="font-label text-xs font-bold px-2 py-1 bg-tertiary-container/10 text-tertiary-container rounded">8 Events</span>
+</div>
+<div class="flex items-center justify-between group cursor-pointer">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="currency_exchange">currency_exchange</span>
+<span class="font-label text-sm">FX Drift Errors</span>
+</div>
+<span class="font-label text-xs font-bold px-2 py-1 bg-tertiary-container/10 text-tertiary-container rounded">3 Events</span>
+</div>
+</div>
+<div class="pt-6 border-t border-outline-variant/30 text-center">
+<button class="text-primary font-label text-xs font-bold uppercase tracking-widest hover:opacity-70">
+                            Download Audit Log
+                        </button>
+</div>
+</div>
+<!-- List of smaller anomalies -->
+<div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Anomaly Item 2 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl suede-depth hover:bg-surface-container-low transition-colors group">
+<div class="flex justify-between items-start mb-6">
+<div class="flex gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="local_shipping">local_shipping</span>
+</div>
+<div>
+<h4 class="font-headline text-lg">FedEx Ground Overage</h4>
+<p class="font-label text-[10px] text-stone-400 tracking-tighter">#FDX-2041-A • FEDEX EXPRESS</p>
+</div>
+</div>
+<span class="font-label text-xl font-bold text-primary">+$842.12</span>
+</div>
+<div class="flex justify-between items-end">
+<div class="space-y-1">
+<p class="text-[10px] font-label text-stone-400 uppercase">Description</p>
+<p class="text-xs font-body text-on-surface-variant">Fuel surcharge mismatch on international route 401.</p>
+</div>
+<button class="text-primary border border-primary/20 px-4 py-1.5 rounded text-[10px] font-label font-bold uppercase hover:bg-primary hover:text-white transition-all">
+                                Review
+                            </button>
+</div>
+</div>
+<!-- Anomaly Item 3 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl suede-depth hover:bg-surface-container-low transition-colors group">
+<div class="flex justify-between items-start mb-6">
+<div class="flex gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="shopping_bag">shopping_bag</span>
+</div>
+<div>
+<h4 class="font-headline text-lg">Shopify Payout Gap</h4>
+<p class="font-label text-[10px] text-stone-400 tracking-tighter">#SHP-1102-L • SHOPIFY INC.</p>
+</div>
+</div>
+<span class="font-label text-xl font-bold text-primary">-$2,100.00</span>
+</div>
+<div class="flex justify-between items-end">
+<div class="space-y-1">
+<p class="text-[10px] font-label text-stone-400 uppercase">Description</p>
+<p class="text-xs font-body text-on-surface-variant">Refund processed in Shopify but not reflected in clearing account.</p>
+</div>
+<button class="text-primary border border-primary/20 px-4 py-1.5 rounded text-[10px] font-label font-bold uppercase hover:bg-primary hover:text-white transition-all">
+                                Review
+                            </button>
+</div>
+</div>
+</div>
+<!-- Featured Graphic/Visual Relief -->
+<div class="lg:col-span-3 h-80 rounded-xl overflow-hidden relative suede-depth">
+<img class="w-full h-full object-cover" data-alt="extreme close up of a high-end motherboard with intricate gold and terracotta pathways glowing under soft cybernetic light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDEIbnF8dwuYoXcuRRwsS8RieuCK_4o3rN_DCE680LBhUX2Eto-1EZ_YhdT5rZCFKwLvEcxbqlMiylQK6LLb4FHTYkCXS2k901E4Gl5zAmFnHrrwW_Qv4i7yqtYFjlfaaZtcP6-NcWDLpfWpQlf2fRo8TCQKM8-TdWfdwPltv5q59vlW_Rm4hkBnOxrZ16BGnIEYZ6O74xov0tnO34z1RN9JwsNt3lcnfdPwbiZvZlWs7qBbl1LksRfsw63SrMXGwLhYZb5qs3VH0"/>
+<div class="absolute inset-0 bg-gradient-to-r from-[#a1392a]/80 to-transparent flex items-center p-12">
+<div class="max-w-md space-y-4">
+<h2 class="text-4xl font-headline text-white leading-tight">Automated Traceability.</h2>
+<p class="text-white/80 font-body text-sm">Every gap is cross-referenced with local storage and cloud APIs to find the 'Missing Penny' in your ledger ecosystem.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Background grid noise/texture overlay -->
+<div class="fixed inset-0 pointer-events-none opacity-[0.03] mix-blend-multiply bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]"></div>
+</main>
+</body></html>

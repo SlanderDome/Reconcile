@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reconcile.ly - Export &amp; Summary</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&amp;family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;family=Space+Grotesk:wght@400;500&amp;family=Epilogue:wght@700&amp;family=Plus+Jakarta+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "outline": "#8a716d",
+              "on-primary-fixed-variant": "#842418",
+              "surface-container-low": "#f5f3ef",
+              "secondary-fixed-dim": "#67dbae",
+              "on-secondary-fixed": "#002115",
+              "outline-variant": "#dec0bb",
+              "on-tertiary-fixed-variant": "#653e00",
+              "surface-container-highest": "#e4e2de",
+              "on-error-container": "#93000a",
+              "surface-container": "#efeeea",
+              "secondary-container": "#82f5c6",
+              "surface-container-high": "#eae8e4",
+              "tertiary-fixed-dim": "#ffb95e",
+              "error-container": "#ffdad6",
+              "surface-bright": "#fbf9f5",
+              "surface-dim": "#dbdad6",
+              "on-secondary-fixed-variant": "#00513a",
+              "surface-tint": "#a43c2d",
+              "on-secondary-container": "#007151",
+              "on-primary-fixed": "#400100",
+              "on-secondary": "#ffffff",
+              "inverse-on-surface": "#f2f0ed",
+              "tertiary-container": "#a36700",
+              "secondary-fixed": "#85f8c9",
+              "primary": "#a1392a",
+              "surface": "#fbf9f5",
+              "primary-container": "#c15140",
+              "on-surface": "#1b1c1a",
+              "inverse-surface": "#30312e",
+              "on-tertiary-fixed": "#2a1700",
+              "surface-variant": "#e4e2de",
+              "secondary": "#006c4e",
+              "inverse-primary": "#ffb4a7",
+              "primary-fixed-dim": "#ffb4a7",
+              "background": "#fbf9f5",
+              "tertiary": "#815100",
+              "on-primary": "#ffffff",
+              "on-tertiary-container": "#fffbff",
+              "on-primary-container": "#fffbff",
+              "surface-container-lowest": "#ffffff",
+              "error": "#ba1a1a",
+              "on-background": "#1b1c1a",
+              "primary-fixed": "#ffdad4",
+              "on-tertiary": "#ffffff",
+              "on-surface-variant": "#57423e",
+              "tertiary-fixed": "#ffddb7",
+              "on-error": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Syne", "Epilogue", "sans-serif"],
+              "body": ["DM Sans", "Plus Jakarta Sans", "sans-serif"],
+              "label": ["JetBrains Mono", "Space Grotesk", "monospace"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        display: inline-block;
+        vertical-align: middle;
+      }
+      .bg-grid {
+        background-image: radial-gradient(circle, #dec0bb 1px, transparent 1px);
+        background-size: 32px 32px;
+        opacity: 0.15;
+      }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-[#fbf9f5] dark:bg-stone-950 flex justify-between items-center px-8 py-4 max-w-full mx-auto bg-[url('https://www.transparenttextures.com/patterns/graph-paper.png')] bg-repeat transition-all">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-bold tracking-tight text-[#a1392a] dark:text-[#c15140] font-[Syne]">Reconcile.ly</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-stone-500 dark:text-stone-400 font-medium hover:text-[#a1392a] dark:hover:text-[#c15140] transition-colors duration-200" href="#">Upload</a>
+<a class="text-stone-500 dark:text-stone-400 font-medium hover:text-[#a1392a] dark:hover:text-[#c15140] transition-colors duration-200" href="#">Dashboard</a>
+<a class="text-[#a1392a] dark:text-[#c15140] font-bold border-b-2 border-[#a1392a] pb-1 hover:text-[#a1392a] dark:hover:text-[#c15140] transition-colors duration-200" href="#">Export</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-transform duration-200 active:scale-95">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-transform duration-200 active:scale-95">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden ml-2 ring-2 ring-outline-variant/30">
+<img alt="User profile" data-alt="minimalist close-up portrait of a professional woman with soft lighting and warm neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGAXclqTJFtMOeJ6x3dT34gYKmHVike4jMx2-c303z7_oNFLj9ZMh3xni4TNn8nMn7cSFIl0Rr2zjoStWnfx_jjRGS1uSPDOJ5_p1cwTDoXAVoTsxb42s3FZTqMD0bpWMvdGAXe2fe5hSZ7gIqXXs3m2gWNY7bkvpFRPkgz82utj_5G7PsPdQJeGUVkilaPn19vqiOV5ts3j6tKpe2O-yEbomZhZ-j0oGzPsTj8vCtoLgRzFTivli4T8_KQHOgApMvVFxsTrZsBog"/>
+</div>
+</div>
+</header>
+<main class="relative pt-32 pb-20 px-6 min-h-screen flex flex-col items-center justify-center overflow-hidden">
+<!-- Structural Background Grid -->
+<div class="absolute inset-0 bg-grid pointer-events-none"></div>
+<!-- Hero Content Section -->
+<div class="relative z-10 w-full max-w-4xl flex flex-col items-center text-center">
+<!-- Badge / Success State -->
+<div class="mb-6 px-4 py-1.5 rounded-full bg-secondary-fixed/20 text-secondary font-label text-xs uppercase tracking-widest flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                Process Finalized
+            </div>
+<!-- Headline -->
+<h1 class="text-6xl md:text-8xl font-headline font-extrabold text-on-surface leading-[0.9] tracking-tighter mb-12">
+                Reconciliation<br/>
+<span class="text-primary italic">Complete</span>
+</h1>
+<!-- Summary Visualization (Asymmetric Editorial Style) -->
+<div class="w-full grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 text-left items-end">
+<!-- Matched -->
+<div class="group border-l-2 border-outline-variant/30 pl-6 py-4 transition-all hover:border-primary">
+<p class="font-body text-on-surface-variant text-sm mb-1 uppercase tracking-wider">Total Matched</p>
+<div class="flex items-baseline gap-2">
+<span class="font-headline text-5xl font-bold text-on-surface">$2.4M</span>
+<span class="font-label text-secondary text-xs">MATCHED</span>
+</div>
+</div>
+<!-- Missing -->
+<div class="group border-l-2 border-outline-variant/30 pl-6 py-4 transition-all hover:border-primary">
+<p class="font-body text-on-surface-variant text-sm mb-1 uppercase tracking-wider">Total Missing</p>
+<div class="flex items-baseline gap-2">
+<span class="font-headline text-5xl font-bold text-on-surface">$12.4K</span>
+<span class="font-label text-error text-xs">ABSENT</span>
+</div>
+</div>
+<!-- Short-paid -->
+<div class="group border-l-2 border-outline-variant/30 pl-6 py-4 transition-all hover:border-primary">
+<p class="font-body text-on-surface-variant text-sm mb-1 uppercase tracking-wider">Total Short-paid</p>
+<div class="flex items-baseline gap-2">
+<span class="font-headline text-5xl font-bold text-on-surface">$8.2K</span>
+<span class="font-label text-on-tertiary-fixed-variant text-xs">DISCREPANCY</span>
+</div>
+</div>
+</div>
+<!-- CTA Section -->
+<div class="flex flex-col items-center gap-8 w-full max-w-md">
+<!-- Primary Action -->
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-white font-headline text-sm font-bold tracking-[0.15em] uppercase px-8 py-5 rounded-md shadow-2xl shadow-primary/20 flex items-center justify-center gap-3 transition-all hover:scale-[1.02] active:scale-95 group">
+<span class="material-symbols-outlined" data-icon="ios_share">ios_share</span>
+                    Download discrepancy report
+                </button>
+<!-- Secondary Link -->
+<a class="text-on-surface-variant hover:text-primary font-body text-sm font-medium tracking-wide flex items-center gap-2 group transition-colors" href="#">
+<span class="material-symbols-outlined text-sm group-hover:-rotate-45 transition-transform" data-icon="refresh">refresh</span>
+                    Start new reconciliation
+                </a>
+</div>
+</div>
+<!-- Decorative Element: Asymmetric Ledger Sheet -->
+<div class="absolute bottom-0 right-0 w-1/3 h-64 bg-surface-container-low opacity-50 -z-10 translate-y-20 rotate-12 blur-3xl"></div>
+<div class="absolute top-20 left-0 w-1/4 h-64 bg-primary/5 opacity-30 -z-10 -translate-x-20 -rotate-12 blur-3xl"></div>
+<!-- Detail Meta (JetBrains Mono) -->
+<div class="fixed bottom-8 left-8 hidden lg:block">
+<div class="space-y-1 opacity-40">
+<p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Archival Reference</p>
+<p class="font-label text-xs font-medium text-on-surface">REC-2023-OCT-0422</p>
+</div>
+</div>
+<!-- Timestamp (JetBrains Mono) -->
+<div class="fixed bottom-8 right-8 hidden lg:block">
+<div class="text-right space-y-1 opacity-40">
+<p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Generation Time</p>
+<p class="font-label text-xs font-medium text-on-surface">2023.10.27 // 14:32 UTC</p>
+</div>
+</div>
+</main>
+<!-- Mobile Bottom Navigation (Hidden on desktop) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-surface-container-highest/90 backdrop-blur-xl border-t border-outline-variant/20 z-50 flex justify-around items-center py-4 px-6">
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="cloud_upload">cloud_upload</span>
+<span class="font-label text-[10px] font-bold">UPLOAD</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label text-[10px] font-bold">DASHBOARD</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" data-icon="ios_share" style="font-variation-settings: 'FILL' 1;">ios_share</span>
+<span class="font-label text-[10px] font-bold">EXPORT</span>
+</button>
+</nav>
+</body></html>
