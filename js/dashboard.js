@@ -63,6 +63,24 @@ const Dashboard = (() => {
     if (shortpaidNote) {
       shortpaidNote.textContent = 'Spread across ' + s.countShortPaid + ' orders';
     }
+
+    // Recovery Potential Banner
+    const recoveryBanner = document.getElementById('recovery-banner');
+    const recoveryValue = document.getElementById('recovery-value');
+    if (recoveryBanner && recoveryValue && typeof Claims !== 'undefined') {
+      const totalRecovery = Claims.getRecoveryTotal(session.results);
+      if (totalRecovery > 0) {
+        recoveryBanner.style.display = '';
+        App.animateValue(recoveryValue, 0, totalRecovery, 900, (v) => App.formatCurrencyFull(v));
+
+        // Update subtitle with count
+        const discrepancies = Claims.getDiscrepancies(session.results);
+        const sub = recoveryBanner.querySelector('.recovery-banner-sub');
+        if (sub) sub.textContent = `across ${discrepancies.length} discrepancies — ready to claim today`;
+      } else {
+        recoveryBanner.style.display = 'none';
+      }
+    }
   }
 
   function setupSubViewSwitching() {

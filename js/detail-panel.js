@@ -160,10 +160,17 @@ const DetailPanel = (() => {
     if (el) el.textContent = val || '—';
   }
 
+  function generateClaim() {
+    if (currentIdx == null) return;
+    const row = Table.getDataByIndex(currentIdx);
+    if (!row) return;
+    Claims.openClaimModal(row);
+  }
+
   // Close on Escape key
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') close();
   });
 
-  return { open, close, markResolved, copyAWB };
+  return { open, close, markResolved, copyAWB, generateClaim };
 })();

@@ -84,7 +84,13 @@ const Anomalies = (() => {
         </div>
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <p style="font-size:0.75rem; font-style:italic; color:#8a716d; max-width:24rem;">Expected ${App.formatCurrencyFull(featured.orderValue)}, received ${App.formatCurrencyFull(featured.remittedAmount)}. Gap of ${(featured.gapPercent * 100).toFixed(1)}% exceeds threshold.</p>
-          <button class="btn-primary-sm" onclick="DetailPanel.open(${results.indexOf(featured)})">Resolve</button>
+          <div style="display:flex; gap:0.5rem;">
+            <button class="btn-generate-claim" onclick="event.stopPropagation(); Claims.openClaimModal(App.loadSession().results[${results.indexOf(featured)}])">
+              <span class="material-symbols-outlined" style="font-size:14px;">gavel</span>
+              Claim
+            </button>
+            <button class="btn-primary-sm" onclick="DetailPanel.open(${results.indexOf(featured)})">Resolve</button>
+          </div>
         </div>
       </div>`;
 
@@ -147,7 +153,12 @@ const Anomalies = (() => {
                 <p style="font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:#8a716d; text-transform:uppercase; margin-bottom:0.25rem;">Expected</p>
                 <p style="font-size:0.75rem; color:#57423e;">${App.formatCurrencyFull(a.orderValue)} → ${App.formatCurrencyFull(a.remittedAmount)}</p>
               </div>
-              <button style="color:#a1392a; border:1px solid rgba(161,57,42,0.2); padding:0.375rem 1rem; border-radius:2px; font-family:'JetBrains Mono',monospace; font-size:0.6rem; font-weight:700; text-transform:uppercase; background:none; cursor:pointer; transition:all 0.2s;" onmouseenter="this.style.background='#a1392a';this.style.color='#fff'" onmouseleave="this.style.background='none';this.style.color='#a1392a'" onclick="DetailPanel.open(${globalIdx})">Review</button>
+              <div style="display:flex; gap:0.375rem;">
+                <button style="color:#a1392a; border:1px solid rgba(161,57,42,0.2); padding:0.375rem 0.75rem; border-radius:2px; font-family:'JetBrains Mono',monospace; font-size:0.6rem; font-weight:700; text-transform:uppercase; background:none; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:0.25rem;" onmouseenter="this.style.background='#a1392a';this.style.color='#fff'" onmouseleave="this.style.background='none';this.style.color='#a1392a'" onclick="event.stopPropagation(); Claims.openClaimModal(App.loadSession().results[${globalIdx}])">
+                  <span class="material-symbols-outlined" style="font-size:12px;">gavel</span>Claim
+                </button>
+                <button style="color:#a1392a; border:1px solid rgba(161,57,42,0.2); padding:0.375rem 1rem; border-radius:2px; font-family:'JetBrains Mono',monospace; font-size:0.6rem; font-weight:700; text-transform:uppercase; background:none; cursor:pointer; transition:all 0.2s;" onmouseenter="this.style.background='#a1392a';this.style.color='#fff'" onmouseleave="this.style.background='none';this.style.color='#a1392a'" onclick="DetailPanel.open(${globalIdx})">Review</button>
+              </div>
             </div>
           </div>`;
       }

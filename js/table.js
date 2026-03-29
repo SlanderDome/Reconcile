@@ -116,6 +116,9 @@ const Table = (() => {
       const resolvedClass = row.resolved ? 'opacity:0.55;' : '';
       const gapColor = row.gap > 0 ? '#a1392a' : (row.gap === 0 ? '#006c4e' : '#1b1c1a');
       const gapDisplay = row.gap > 0 ? '-' + App.formatCurrencyFull(row.gap) : App.formatCurrencyFull(0);
+      const claimedBadge = (typeof Claims !== 'undefined' && Claims.isClaimGenerated(row.awb))
+        ? '<span class="claimed-badge">Claimed</span>'
+        : '';
 
       return `
         <tr class="table-row" style="cursor:${isClickable ? 'pointer' : 'default'}; ${resolvedClass}"
@@ -129,7 +132,7 @@ const Table = (() => {
           <td class="td-status">
             <span class="status-pill" style="background:${sc.bg};color:${sc.text}">
               ${sc.label}
-            </span>
+            </span>${claimedBadge}
           </td>
         </tr>`;
     }).join('');

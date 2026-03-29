@@ -135,6 +135,19 @@
         </div>
       </div>
 
+      <!-- Recovery Potential Banner -->
+      <div id="recovery-banner" class="recovery-banner" style="display:none;">
+        <div class="recovery-banner-text">
+          <p class="recovery-banner-label">Recovery Potential</p>
+          <h2 id="recovery-value" class="recovery-banner-value">₹0</h2>
+          <p class="recovery-banner-sub">ready to claim today</p>
+        </div>
+        <button class="btn-recovery" onclick="Claims.generateAllClaims(App.loadSession().results)">
+          <span class="material-symbols-outlined" style="font-size:18px;">download</span>
+          Generate All Claims
+        </button>
+      </div>
+
       <!-- Transaction Table -->
       <div class="table-container">
         <div class="table-header">
@@ -314,6 +327,10 @@
         <span class="material-symbols-outlined" style="font-size:14px; margin-right:0.25rem;">content_copy</span>
         Copy AWB
       </button>
+      <button id="btn-generate-claim" class="btn-generate-claim" onclick="DetailPanel.generateClaim()">
+        <span class="material-symbols-outlined" style="font-size:14px;">gavel</span>
+        Generate Claim
+      </button>
       <button id="btn-mark-resolved" class="btn-primary" onclick="DetailPanel.markResolved()">
         Mark as resolved
       </button>
@@ -429,9 +446,11 @@
   </div>
 </aside>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="js/app.js"></script>
 <script src="js/reconcile.js"></script>
 <script src="js/table.js"></script>
+<script src="js/claims.js"></script>
 <script src="js/detail-panel.js"></script>
 <script src="js/anomalies.js"></script>
 <script src="js/dashboard.js"></script>
