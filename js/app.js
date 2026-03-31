@@ -88,9 +88,30 @@ const App = (() => {
     return sign + sym + Math.abs(n).toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
+  function parseDate(dateStr) {
+    if (!dateStr) return 'Unknown';
+    const str = String(dateStr).trim();
+    
+    // Handle YYYY-MM-DD
+    if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+      const [y, m, d] = str.split('-');
+      return new Date(y, m - 1, d);
+    }
+    // Handle DD/MM/YYYY
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(str)) {
+      const [d, m, y] = str.split('/');
+      return new Date(y, m - 1, d);
+    }
+    // Handle MM/DD/YYYY
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(str)) {
+      return new Date(str);
+    }
+    return new Date(str);
+  }
+
   function formatDate(d) {
     if (!d) return '—';
-    const date = new Date(d);
+    const date = parseDate(d);
     if (isNaN(date.getTime())) return String(d);
     const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
@@ -98,7 +119,7 @@ const App = (() => {
 
   function formatDateCompact(d) {
     if (!d) return '—';
-    const date = new Date(d);
+    const date = parseDate(d);
     if (isNaN(date.getTime())) return String(d);
     const y = date.getFullYear();
     const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -134,19 +155,20 @@ const App = (() => {
     return 'REC_' + num;
   }
 
-  /* ---------- AWB Normalization ---------- */
-  function normalizeAWB(awb) {
-    if (!awb) return '';
-    return String(awb).trim().toUpperCase().replace(/[-\s]/g, '');
+  /* ---------- Transaction ID Normalization ---------- */
+  function normalizeAWB(id) {
+    if (!id) return '';
+    return String(id).trim().toUpperCase().replace(/[-\s]/g, '');
   }
 
   /* ---------- Status colors ---------- */
   const STATUS_COLORS = {
-    'MATCHED':    { bg: 'rgba(0,108,78,0.1)',  text: '#006c4e', label: 'Matched' },
-    'SHORT-PAID': { bg: 'rgba(163,103,0,0.1)', text: '#a36700', label: 'Short-paid' },
-    'MISSING':    { bg: 'rgba(161,57,42,0.1)', text: '#a1392a', label: 'Missing' },
-    'PENDING':    { bg: 'rgba(138,113,109,0.1)', text: '#8a716d', label: 'Pending' },
-    'RESOLVED':   { bg: 'rgba(0,108,78,0.15)', text: '#006c4e', label: 'Resolved' }
+    'MATCHED':         { bg: 'rgba(0,108,78,0.1)',   text: '#006c4e', label: 'Matched' },
+    'TIMING GAP':      { bg: 'rgba(161,57,42,0.1)',  text: '#a1392a', label: 'Timing Gap' },
+    'DUPLICATE':       { bg: 'rgba(163,103,0,0.1)',  text: '#a36700', label: 'Duplicate' },
+    'ROUNDING':        { bg: 'rgba(138,113,109,0.1)',text: '#8a716d', label: 'Rounding' },
+    'ORPHANED REFUND': { bg: 'rgba(128,0,128,0.1)',  text: '#800080', label: 'Orphaned Refund' },
+    'RESOLVED':        { bg: 'rgba(0,108,78,0.15)',  text: '#006c4e', label: 'Resolved' }
   };
 
   /* ---------- CSV Generation ---------- */
@@ -177,35 +199,38 @@ const App = (() => {
 
   /* ---------- Sample Data Generation ---------- */
   function generateSampleOrderCSV() {
-    const headers = ['AWB', 'Order Date', 'City', 'Expected Amount'];
+    const headers = ['TransactionID', 'Date', 'Amount', 'Customer'];
     const rows = [
-      ['AWB-10001', '2024-10-15', 'San Francisco', '450.00'],
-      ['AWB-10002', '2024-10-15', 'Austin', '1200.00'],
-      ['AWB-10003', '2024-10-14', 'Seattle', '89.00'],
-      ['AWB-10004', '2024-10-14', 'Chicago', '3240.00'],
-      ['AWB-10005', '2024-10-13', 'Miami', '512.40'],
-      ['AWB-10006', '2024-10-13', 'New York', '780.00'],
-      ['AWB-10007', '2024-10-12', 'Denver', '1650.00'],
-      ['AWB-10008', '2024-10-12', 'Portland', '320.00'],
-      ['AWB-10009', '2024-10-11', 'Boston', '2100.00'],
-      ['AWB-10010', '2024-10-11', 'Dallas', '945.00'],
+      ['MAT-001', '2024-10-01', '100.00', 'Perfect1'],
+      ['MAT-002', '2024-10-02', '200.00', 'Perfect2'],
+      ['MAT-003', '2024-10-03', '300.00', 'Perfect3'],
+      ['MAT-004', '2024-10-04', '400.00', 'Perfect4'],
+      ['MAT-005', '2024-10-05', '500.00', 'Perfect5'],
+      ['TXN-001', '2024-10-31', '5000.00', 'TimingGapUser'],
+      ['RND-001', '2024-10-15', '100.001', 'RounderUser1'],
+      ['RND-002', '2024-10-15', '100.001', 'RounderUser2'],
+      ['RND-003', '2024-10-15', '100.001', 'RounderUser3'],
+      ['TXN-005', '2024-10-20', '2500.00', 'DuplicateUser'],
+      ['REF-001', '2024-10-25', '-1500.00', 'OrphanRefundUser'],
     ];
     return arrayToCSV(headers, rows);
   }
 
   function generateSampleRemittanceCSV() {
-    const headers = ['AWB', 'Remitted Amount', 'Settlement Date'];
+    const headers = ['TransactionID', 'SettlementDate', 'Amount'];
     const rows = [
-      ['AWB-10001', '450.00', '2024-10-18'],    // Matched
-      ['AWB-10002', '1150.00', '2024-10-18'],   // Short-paid (gap $50, 4.2%)
-      ['AWB-10003', '0', '2024-10-17'],          // Pending (remitted 0)
-      ['AWB-10004', '3240.00', '2024-10-17'],   // Matched
-      ['AWB-10005', '490.00', '2024-10-16'],    // Short-paid (gap $22.40, 4.4%)
-      // AWB-10006 missing entirely               // Missing
-      ['AWB-10007', '1650.00', '2024-10-15'],   // Matched
-      ['AWB-10008', '280.00', '2024-10-15'],    // Short-paid (gap $40, 12.5%)
-      // AWB-10009 missing entirely               // Missing
-      ['AWB-10010', '945.00', '2024-10-14'],    // Matched
+      ['MAT-001', '2024-10-03', '100.00'],
+      ['MAT-002', '2024-10-04', '200.00'],
+      ['MAT-003', '2024-10-05', '300.00'],
+      ['MAT-004', '2024-10-06', '400.00'],
+      ['MAT-005', '2024-10-07', '500.00'],
+      // TXN-001 is deliberately missing from bank file (Timing Gap)
+      ['RND-001', '2024-10-17', '100.00'],
+      ['RND-002', '2024-10-17', '100.00'],
+      ['RND-003', '2024-10-17', '100.00'],
+      ['TXN-005', '2024-10-22', '2500.00'],
+      ['TXN-005', '2024-10-22', '2500.00'], // The duplicate
+      // REF-001 is missing from bank file (Orphaned Refund)
     ];
     return arrayToCSV(headers, rows);
   }

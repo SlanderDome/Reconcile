@@ -1,6 +1,6 @@
 /* ============================================================
    Reconcile.ly — detail-panel.js
-   Slide-in comparison panel for individual AWB records
+   Slide-in comparison panel for individual transaction records
    ============================================================ */
 
 const DetailPanel = (() => {
@@ -19,11 +19,11 @@ const DetailPanel = (() => {
     setText('detail-awb', row.awb);
     setText('detail-order-value', App.formatCurrencyFull(row.orderValue));
     setText('detail-order-date', App.formatDate(row.orderDate));
-    setText('detail-order-city', row.city);
+    setText('detail-order-city', row.orderValue < 0 ? 'Refund' : 'Payment');
     setText('detail-courier', row.courier || 'Auto-detected');
 
     // Populate right column — Settlement Data
-    setText('detail-ref-id', row.awb.replace('AWB', 'ST') + '-S');
+    setText('detail-ref-id', row.awb.replace('TXN', 'BNK').replace('REF', 'BNK') + '-S');
     setText('detail-remitted', App.formatCurrencyFull(row.remittedAmount));
 
     // Delta card
@@ -36,11 +36,17 @@ const DetailPanel = (() => {
       const gapPct = row.gapPercent;
       deltaAmount.textContent = '-' + App.formatCurrencyFull(gap);
 
-      if (Math.abs(gapPct) >= 0.02 && gap > 0) {
-        deltaDesc.textContent = `The payout is ${(gapPct * 100).toFixed(1)}% lower than the original order value. Discrepancy exceeds the allowable 2% threshold.`;
+      if (row.status === 'TIMING GAP') {
+        deltaDesc.textContent = 'No matching bank settlement found for this transaction. Full amount is unaccounted for.';
         deltaCard.style.display = '';
-      } else if (row.status === 'MISSING') {
-        deltaDesc.textContent = 'No matching remittance record found for this AWB. Full order value is unaccounted for.';
+      } else if (row.status === 'DUPLICATE') {
+        deltaDesc.textContent = 'This transaction ID appears multiple times in the bank file. Possible double-settlement.';
+        deltaCard.style.display = '';
+      } else if (row.status === 'ROUNDING') {
+        deltaDesc.textContent = `Rounding discrepancy of ${App.formatCurrencyFull(gap)} detected. Difference is under $0.05.`;
+        deltaCard.style.display = '';
+      } else if (row.status === 'ORPHANED REFUND') {
+        deltaDesc.textContent = 'Negative transaction amount with no matching original in bank records. Possible orphaned refund.';
         deltaCard.style.display = '';
       } else {
         deltaCard.style.display = 'none';

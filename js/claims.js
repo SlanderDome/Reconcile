@@ -1,6 +1,6 @@
 /* ============================================================
    Reconcile.ly — claims.js
-   Claims generator: modal, email templates, bulk ZIP export
+   Bank Inquiry Generator: modal, email templates, bulk ZIP export
    ============================================================ */
 
 const Claims = (() => {
@@ -9,20 +9,20 @@ const Claims = (() => {
   const SELLER_NAME_KEY = 'reconcile_seller_name';
   const CLAIMS_KEY     = 'claims_generated';
 
-  const COURIER_OPTIONS = [
-    'Shiprocket', 'Delhivery', 'Ekart', 'Borzo',
-    'BlueDart', 'FedEx', 'Xpressbees', 'Shadowfax', 'Other'
+  const BANK_OPTIONS = [
+    'Stripe', 'Razorpay', 'PayPal', 'Square',
+    'Adyen', 'Chase', 'HDFC Bank', 'ICICI Bank', 'Other'
   ];
 
-  const COURIER_EMAILS = {
-    'Shiprocket':  'support@shiprocket.in',
-    'Delhivery':   'support@delhivery.com',
-    'Ekart':       'ekart.support@flipkart.com',
-    'Borzo':       'support@borzo.com',
-    'BlueDart':    'customerservice@bluedart.com',
-    'FedEx':       'customer.relations@fedex.com',
-    'Xpressbees':  'support@xpressbees.com',
-    'Shadowfax':   'support@shadowfax.in',
+  const BANK_EMAILS = {
+    'Stripe':     'support@stripe.com',
+    'Razorpay':   'support@razorpay.com',
+    'PayPal':     'support@paypal.com',
+    'Square':     'support@squareup.com',
+    'Adyen':      'support@adyen.com',
+    'Chase':      'merchant.services@chase.com',
+    'HDFC Bank':  'merchant@hdfcbank.com',
+    'ICICI Bank': 'merchant@icicibank.com',
   };
 
   /* ---------- localStorage Helpers ---------- */
@@ -50,45 +50,60 @@ const Claims = (() => {
     return getClaimsGenerated().includes(awb);
   }
 
-  /* ---------- Courier Matching ---------- */
+  /* ---------- Bank/Processor Matching ---------- */
   function matchCourier(courierRaw) {
-    if (!courierRaw || courierRaw === 'Auto-detected') return COURIER_OPTIONS[0];
+    if (!courierRaw || courierRaw === 'Auto-detected') return BANK_OPTIONS[0];
     const lower = courierRaw.toLowerCase();
-    for (const c of COURIER_OPTIONS) {
+    for (const c of BANK_OPTIONS) {
       if (c === 'Other') continue;
       if (lower.includes(c.toLowerCase())) return c;
     }
-    return COURIER_OPTIONS[0];
+    return BANK_OPTIONS[0];
   }
 
-  function getCourierEmail(courierName) {
-    return COURIER_EMAILS[courierName] || '';
+  function getCourierEmail(bankName) {
+    return BANK_EMAILS[bankName] || '';
   }
 
   /* ---------- Email Template ---------- */
   function buildSubject(row, gapAmount) {
-    return `COD Remittance Discrepancy — AWB ${row.awb} — Claim for ${App.formatCurrencyFull(gapAmount)}`;
+    const gapTypeLabel = {
+      'TIMING GAP': 'Timing Gap',
+      'DUPLICATE': 'Duplicate Settlement',
+      'ROUNDING': 'Rounding Difference',
+      'ORPHANED REFUND': 'Orphaned Refund',
+    }[row.status] || 'Settlement Discrepancy';
+    return `Settlement Discrepancy — Transaction ID ${row.awb} — ${gapTypeLabel}`;
   }
 
-  function buildBody(row, courierName, sellerName) {
+  function buildBody(row, bankName, sellerName) {
     const gap = row.gap;
     const gapPct = ((row.gapPercent || 0) * 100).toFixed(1);
-    return `Dear ${courierName} Support Team,
+    const gapTypeLabel = {
+      'TIMING GAP': 'The transaction exists in our platform records but has not yet appeared in the bank settlement file.',
+      'DUPLICATE': 'This transaction ID appears multiple times in the bank settlement file, indicating a possible double-settlement.',
+      'ROUNDING': 'There is a small rounding difference between the transaction amount and the settled amount.',
+      'ORPHANED REFUND': 'A refund transaction exists with no corresponding original payment in the bank records.',
+    }[row.status] || 'A discrepancy has been identified between our records and the bank settlement.';
 
-I am writing to formally dispute a remittance discrepancy for the following shipment:
+    return `Dear ${bankName} Settlements Team,
 
-AWB Number: ${row.awb}
-Order Date: ${App.formatDate(row.orderDate)}
-Delivery City: ${row.city}
-Expected COD Amount: ${App.formatCurrencyFull(row.orderValue)}
-Amount Remitted: ${App.formatCurrencyFull(row.remittedAmount)}
-Discrepancy: ${App.formatCurrencyFull(gap)} (${gapPct}%)
+I am writing to inquire about a settlement discrepancy for the following transaction:
 
-This amount was not included in my remittance settlement dated ${App.formatDate(row.settlementDate)}. As per our service agreement, I request the outstanding amount of ${App.formatCurrencyFull(gap)} be remitted to my account within 7 working days.
+Transaction ID: ${row.awb}
+Transaction Date: ${App.formatDate(row.orderDate)}
+Transaction Amount: ${App.formatCurrencyFull(row.orderValue)}
+Settled Amount: ${App.formatCurrencyFull(row.remittedAmount)}
+Difference: ${App.formatCurrencyFull(gap)} (${gapPct}%)
+Gap Type: ${row.status}
+Bank Settlement Date: ${App.formatDate(row.settlementDate)}
 
-Please confirm receipt of this claim and provide a resolution timeline.
+Discrepancy Details:
+${gapTypeLabel}
 
-Attached: Reconciliation report for reference.
+Please investigate this discrepancy and provide a resolution or explanation within 7 business days.
+
+Attached: Full reconciliation report for reference.
 
 Regards,
 ${sellerName || '[Your Name]'}`;
@@ -125,8 +140,8 @@ ${sellerName || '[Your Name]'}`;
           <div style="display:flex; align-items:center; gap:0.75rem;">
             <span class="material-symbols-outlined" style="color:#a1392a; font-size:1.5rem;">mail</span>
             <div>
-              <h3 style="font-family:var(--font-headline); font-size:1.25rem; font-weight:800; letter-spacing:-0.02em;">Claim Ready to Send</h3>
-              <p style="font-family:var(--font-label); font-size:0.6rem; color:var(--on-surface-variant); text-transform:uppercase; letter-spacing:0.12em;">AWB ${row.awb}</p>
+              <h3 style="font-family:var(--font-headline); font-size:1.25rem; font-weight:800; letter-spacing:-0.02em;">Bank Inquiry Ready</h3>
+              <p style="font-family:var(--font-label); font-size:0.6rem; color:var(--on-surface-variant); text-transform:uppercase; letter-spacing:0.12em;">TXN ${row.awb}</p>
             </div>
           </div>
           <button id="claim-modal-close" style="padding:0.5rem; border-radius:50%; transition:background 0.2s;" onmouseenter="this.style.background='var(--surface-container-low)'" onmouseleave="this.style.background='transparent'">
@@ -136,24 +151,24 @@ ${sellerName || '[Your Name]'}`;
 
         <!-- Body -->
         <div class="claim-modal-body">
-          <!-- Courier dropdown -->
+          <!-- Bank/Processor dropdown -->
           <div class="claim-field">
-            <label class="claim-field-label">Courier</label>
+            <label class="claim-field-label">Bank / Payment Processor</label>
             <select id="claim-courier-select" class="claim-input">
-              ${COURIER_OPTIONS.map(c => `<option value="${c}" ${c === matched ? 'selected' : ''}>${c}</option>`).join('')}
+              ${BANK_OPTIONS.map(c => `<option value="${c}" ${c === matched ? 'selected' : ''}>${c}</option>`).join('')}
             </select>
           </div>
 
-          <!-- Other courier name (hidden by default) -->
+          <!-- Other bank name (hidden by default) -->
           <div id="claim-other-courier-wrap" class="claim-field" style="display:none;">
-            <label class="claim-field-label">Courier Name (manual)</label>
-            <input id="claim-other-courier" type="text" class="claim-input" placeholder="Enter courier name" />
+            <label class="claim-field-label">Bank Name (manual)</label>
+            <input id="claim-other-courier" type="text" class="claim-input" placeholder="Enter bank or processor name" />
           </div>
 
-          <!-- Courier email -->
+          <!-- Bank email -->
           <div class="claim-field">
-            <label class="claim-field-label">Courier Email</label>
-            <input id="claim-email" type="email" class="claim-input" value="${email}" placeholder="support@courier.com" />
+            <label class="claim-field-label">Settlements Email</label>
+            <input id="claim-email" type="email" class="claim-input" value="${email}" placeholder="settlements@bank.com" />
           </div>
 
           <!-- Subject -->
@@ -289,13 +304,13 @@ ${sellerName || '[Your Name]'}`;
   function getRecoveryTotal(results) {
     if (!results) return 0;
     return results
-      .filter(r => r.status === 'SHORT-PAID' || r.status === 'MISSING')
+      .filter(r => r.status !== 'MATCHED' && r.status !== 'RESOLVED' && r.status !== 'TIMING GAP')
       .reduce((sum, r) => sum + (r.gap || 0), 0);
   }
 
   function getDiscrepancies(results) {
     if (!results) return [];
-    return results.filter(r => r.status === 'SHORT-PAID' || r.status === 'MISSING');
+    return results.filter(r => r.status !== 'MATCHED' && r.status !== 'RESOLVED' && r.status !== 'TIMING GAP');
   }
 
   /* ---------- Bulk Claims ZIP ---------- */
@@ -360,7 +375,7 @@ ${body}`;
     getRecoveryTotal,
     getDiscrepancies,
     generateAllClaims,
-    COURIER_OPTIONS,
-    COURIER_EMAILS,
+    BANK_OPTIONS,
+    BANK_EMAILS,
   };
 })();

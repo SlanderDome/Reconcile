@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <title>Reconcile.ly — Revenue Recovery</title>
-  <meta name="description" content="Reconcile your e-commerce order exports against courier remittance files to identify missing payouts and delivery discrepancies."/>
+  <meta name="description" content="Reconcile your platform transactions against bank settlement files to identify timing gaps, duplicates, and rounding discrepancies."/>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=Epilogue:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   <link href="css/styles.css" rel="stylesheet"/>
@@ -40,19 +40,19 @@
   <main class="upload-main">
     <!-- Hero -->
     <section style="max-width:56rem; width:100%; text-align:center; margin-bottom:4rem;">
-      <div class="jb-mono" style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.2em; color:rgba(255,255,255,0.8); margin-bottom:1rem;">Revenue Recovery Engine</div>
+      <div class="jb-mono" style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.2em; color:rgba(255,255,255,0.8); margin-bottom:1rem;">Payments Reconciliation Engine</div>
       <h1 class="syne-bold" style="font-size:clamp(2.5rem,6vw,4.5rem); letter-spacing:-0.04em; line-height:1.05; margin-bottom:2rem;">
-        Find out how much your <span style="color:rgba(0,0,0,0.3); font-style:italic;">courier owes you.</span>
+        Find out why your <span style="color:rgba(0,0,0,0.3); font-style:italic;">books don't balance.</span>
       </h1>
       <p style="color:rgba(255,255,255,0.8); max-width:32rem; margin:0 auto; font-size:1.05rem; line-height:1.6;">
-        Reconcile your e-commerce order exports against courier remittance files to identify missing payouts and delivery discrepancies in seconds.
+        Match your platform transaction records against bank settlements to identify timing gaps, duplicates, rounding errors, and orphaned refunds instantly.
       </p>
     </section>
 
     <!-- Drop Zones -->
     <div style="max-width:68rem; width:100%; display:grid; grid-template-columns:1fr 1fr; gap:2rem; margin-bottom:3rem;">
 
-      <!-- Zone 1: Order Export -->
+      <!-- Zone 1: Platform Transactions -->
       <div id="dropzone-order" class="drop-zone" style="color:#1b1c1a;">
         <input type="file" id="file-input-order" accept=".csv,.xlsx,.xls" style="display:none"/>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
@@ -61,8 +61,8 @@
           </div>
           <span class="jb-mono" style="font-size:0.6rem; color:#57423e; font-weight:500;">SOURCE A</span>
         </div>
-        <h3 class="syne-bold" style="font-size:1.25rem; margin-bottom:0.5rem;">Order Export</h3>
-        <p style="font-size:0.875rem; color:#57423e; margin-bottom:1.5rem;">Upload your Shopify, Magento, or custom store order export.</p>
+        <h3 class="syne-bold" style="font-size:1.25rem; margin-bottom:0.5rem;">Platform Transactions</h3>
+        <p style="font-size:0.875rem; color:#57423e; margin-bottom:1.5rem;">Upload your Shopify, Stripe, or custom platform transaction export.</p>
 
         <!-- Empty state (drag area) -->
         <div id="empty-state-order" class="drop-area">
@@ -97,7 +97,7 @@
         </div>
       </div>
 
-      <!-- Zone 2: Courier Remittance -->
+      <!-- Zone 2: Bank Settlement -->
       <div id="dropzone-remit" class="drop-zone" style="color:#1b1c1a;">
         <input type="file" id="file-input-remit" accept=".csv,.xlsx,.xls" style="display:none"/>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
@@ -106,8 +106,8 @@
           </div>
           <span class="jb-mono" style="font-size:0.6rem; color:#57423e; font-weight:500;">SOURCE B</span>
         </div>
-        <h3 class="syne-bold" style="font-size:1.25rem; margin-bottom:0.5rem;">Courier Remittance</h3>
-        <p style="font-size:0.875rem; color:#57423e; margin-bottom:1.5rem;">Upload the billing statement or remittance file from your courier.</p>
+        <h3 class="syne-bold" style="font-size:1.25rem; margin-bottom:0.5rem;">Bank Settlement</h3>
+        <p style="font-size:0.875rem; color:#57423e; margin-bottom:1.5rem;">Upload the bank statement or settlement file from your payment processor.</p>
 
         <!-- Empty state -->
         <div id="empty-state-remit" class="drop-area">

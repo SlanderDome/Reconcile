@@ -55,10 +55,11 @@ const Table = (() => {
     filteredData = allData.filter(row => {
       // Status filter
       if (statusFilter !== 'all') {
-        if (statusFilter === 'shortpaid' && row.status !== 'SHORT-PAID') return false;
+        if (statusFilter === 'timing-gap' && row.status !== 'TIMING GAP') return false;
         if (statusFilter === 'matched' && row.status !== 'MATCHED') return false;
-        if (statusFilter === 'missing' && row.status !== 'MISSING') return false;
-        if (statusFilter === 'pending' && row.status !== 'PENDING') return false;
+        if (statusFilter === 'rounding' && row.status !== 'ROUNDING') return false;
+        if (statusFilter === 'duplicate' && row.status !== 'DUPLICATE') return false;
+        if (statusFilter === 'orphaned' && row.status !== 'ORPHANED REFUND') return false;
       }
 
       // Search filter
@@ -111,21 +112,22 @@ const Table = (() => {
     }
 
     tbody.innerHTML = pageData.map((row, idx) => {
-      const sc = row.resolved ? App.STATUS_COLORS['RESOLVED'] : (App.STATUS_COLORS[row.status] || App.STATUS_COLORS['PENDING']);
-      const isClickable = row.status === 'SHORT-PAID' || row.status === 'MISSING' || row.status === 'PENDING';
+      const sc = row.resolved ? App.STATUS_COLORS['RESOLVED'] : (App.STATUS_COLORS[row.status] || App.STATUS_COLORS['MATCHED']);
+      const isClickable = row.status !== 'MATCHED';
       const resolvedClass = row.resolved ? 'opacity:0.55;' : '';
       const gapColor = row.gap > 0 ? '#a1392a' : (row.gap === 0 ? '#006c4e' : '#1b1c1a');
       const gapDisplay = row.gap > 0 ? '-' + App.formatCurrencyFull(row.gap) : App.formatCurrencyFull(0);
       const claimedBadge = (typeof Claims !== 'undefined' && Claims.isClaimGenerated(row.awb))
-        ? '<span class="claimed-badge">Claimed</span>'
+        ? '<span class="claimed-badge">Inquired</span>'
         : '';
+      const txnType = row.orderValue < 0 ? 'Refund' : 'Payment';
+      const typeColor = txnType === 'Refund' ? '#800080' : '#006c4e';
 
       return `
         <tr class="table-row" style="cursor:${isClickable ? 'pointer' : 'default'}; ${resolvedClass}"
             data-idx="${start + idx}" ${isClickable ? 'onclick="DetailPanel.open(' + (start + idx) + ')"' : ''}>
           <td class="td-awb">${row.awb}</td>
           <td class="td-date">${App.formatDate(row.orderDate)}</td>
-          <td class="td-city">${row.city}</td>
           <td class="td-amount">${App.formatCurrencyFull(row.orderValue)}</td>
           <td class="td-amount">${App.formatCurrencyFull(row.remittedAmount)}</td>
           <td class="td-amount" style="color:${gapColor}">${row.status === 'MATCHED' ? '$0.00' : gapDisplay}</td>
@@ -134,6 +136,7 @@ const Table = (() => {
               ${sc.label}
             </span>${claimedBadge}
           </td>
+          <td style="text-align:center;"><span style="font-family:var(--font-label); font-size:0.6rem; padding:2px 6px; border-radius:2px; background:${txnType === 'Refund' ? 'rgba(128,0,128,0.08)' : 'rgba(0,108,78,0.08)'}; color:${typeColor}; text-transform:uppercase; letter-spacing:0.08em;">${txnType}</span></td>
         </tr>`;
     }).join('');
   }
@@ -213,11 +216,12 @@ const Table = (() => {
   }
 
   function exportFilteredCSV() {
-    const headers = ['AWB', 'Order Date', 'City', 'Expected', 'Remitted', 'Gap', 'Status'];
+    const headers = ['Transaction ID', 'Date', 'Transaction Amt', 'Settled Amt', 'Gap', 'Status', 'Type'];
     const rows = filteredData.map(r => [
-      r.awb, r.orderDate || '', r.city,
+      r.awb, r.orderDate || '',
       r.orderValue.toFixed(2), r.remittedAmount.toFixed(2),
-      r.gap.toFixed(2), r.status
+      r.gap.toFixed(2), r.status,
+      r.orderValue < 0 ? 'Refund' : 'Payment'
     ]);
     const csv = App.arrayToCSV(headers, rows);
     App.downloadCSV('reconcile_filtered_export.csv', csv);

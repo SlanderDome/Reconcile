@@ -22,8 +22,8 @@ const ExportPage = (() => {
     const shortpaidEl = document.getElementById('export-shortpaid');
 
     if (matchedEl) App.animateValue(matchedEl, 0, s.totalMatched, 600, (v) => App.formatCurrency(v));
-    if (missingEl) App.animateValue(missingEl, 0, s.totalMissing, 600, (v) => App.formatCurrency(v));
-    if (shortpaidEl) App.animateValue(shortpaidEl, 0, s.totalShortPaidGap, 600, (v) => App.formatCurrency(v));
+    if (missingEl) App.animateValue(missingEl, 0, (s.totalTimingGap || s.totalMissing || 0), 600, (v) => App.formatCurrency(v));
+    if (shortpaidEl) App.animateValue(shortpaidEl, 0, (s.totalRoundingGap || s.totalShortPaidGap || 0), 600, (v) => App.formatCurrency(v));
 
     // Session ID
     const sessionEl = document.getElementById('export-session-id');
@@ -45,8 +45,8 @@ const ExportPage = (() => {
     const downloadBtn = document.getElementById('btn-download-report');
     if (downloadBtn) {
       downloadBtn.addEventListener('click', () => {
-        const discrepancies = session.results.filter(r => r.status === 'SHORT-PAID' || r.status === 'MISSING');
-        const headers = ['AWB', 'Order Date', 'City', 'Expected', 'Remitted', 'Gap', 'Status'];
+        const discrepancies = session.results.filter(r => r.status !== 'MATCHED');
+        const headers = ['Transaction ID', 'Date', 'Customer', 'Expected', 'Settled', 'Gap', 'Status'];
         const rows = discrepancies.map(r => [
           r.awb,
           r.orderDate || '',

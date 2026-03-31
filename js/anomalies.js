@@ -10,7 +10,7 @@ const Anomalies = (() => {
 
     // Get all non-matched anomalies sorted by gap descending
     const anomalies = results
-      .filter(r => r.status === 'SHORT-PAID' || r.status === 'MISSING')
+      .filter(r => r.status === 'TIMING GAP' || r.status === 'DUPLICATE' || r.status === 'ROUNDING' || r.status === 'ORPHANED REFUND')
       .sort((a, b) => b.gap - a.gap);
 
     if (anomalies.length === 0) {
@@ -45,7 +45,13 @@ const Anomalies = (() => {
 
     // Featured anomaly (largest gap) — spans 2 columns
     const featured = anomalies[0];
-    const featuredStatusLabel = featured.status === 'MISSING' ? 'Unmatched Entry' : 'Short Payment';
+    const statusLabels = {
+      'TIMING GAP': 'Timing Gap',
+      'DUPLICATE': 'Duplicate Entry',
+      'ROUNDING': 'Rounding Issue',
+      'ORPHANED REFUND': 'Orphaned Refund'
+    };
+    const featuredStatusLabel = statusLabels[featured.status] || featured.status;
     html += `
       <div style="grid-column:span 2; background:#fff; padding:2rem; border-radius:0.5rem; box-shadow:0 4px 20px rgba(87,66,62,0.04),0 10px 40px rgba(87,66,62,0.06); position:relative; overflow:hidden;">
         <div style="position:absolute; top:0; right:0; padding:1rem;">
@@ -63,11 +69,11 @@ const Anomalies = (() => {
         </div>
         <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem; padding:1rem 0; border-top:1px solid rgba(222,192,187,0.1); border-bottom:1px solid rgba(222,192,187,0.1); margin:1rem 0;">
           <div>
-            <p style="font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:#8a716d; text-transform:uppercase; margin-bottom:0.25rem;">AWB</p>
+            <p style="font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:#8a716d; text-transform:uppercase; margin-bottom:0.25rem;">TXN ID</p>
             <p style="font-family:'JetBrains Mono',monospace; font-size:0.8rem; font-weight:700;">${featured.awb}</p>
           </div>
           <div>
-            <p style="font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:#8a716d; text-transform:uppercase; margin-bottom:0.25rem;">City</p>
+            <p style="font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:#8a716d; text-transform:uppercase; margin-bottom:0.25rem;">Customer</p>
             <p style="font-family:'JetBrains Mono',monospace; font-size:0.8rem; font-weight:700;">${featured.city}</p>
           </div>
           <div>
@@ -86,8 +92,8 @@ const Anomalies = (() => {
           <p style="font-size:0.75rem; font-style:italic; color:#8a716d; max-width:24rem;">Expected ${App.formatCurrencyFull(featured.orderValue)}, received ${App.formatCurrencyFull(featured.remittedAmount)}. Gap of ${(featured.gapPercent * 100).toFixed(1)}% exceeds threshold.</p>
           <div style="display:flex; gap:0.5rem;">
             <button class="btn-generate-claim" onclick="event.stopPropagation(); Claims.openClaimModal(App.loadSession().results[${results.indexOf(featured)}])">
-              <span class="material-symbols-outlined" style="font-size:14px;">gavel</span>
-              Claim
+              <span class="material-symbols-outlined" style="font-size:14px;">account_balance</span>
+              Inquiry
             </button>
             <button class="btn-primary-sm" onclick="DetailPanel.open(${results.indexOf(featured)})">Resolve</button>
           </div>
@@ -110,16 +116,23 @@ const Anomalies = (() => {
           <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; cursor:pointer;">
             <div style="display:flex; align-items:center; gap:0.75rem;">
               <span class="material-symbols-outlined" style="color:#a1392a;">warning</span>
-              <span style="font-family:'JetBrains Mono',monospace; font-size:0.8rem;">Short Payments</span>
+              <span style="font-family:'JetBrains Mono',monospace; font-size:0.8rem;">Timing Gaps</span>
             </div>
-            <span style="font-family:'JetBrains Mono',monospace; font-size:0.7rem; font-weight:700; padding:2px 8px; background:rgba(163,103,0,0.1); color:#a36700; border-radius:2px;">${summary.countShortPaid} Events</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:0.7rem; font-weight:700; padding:2px 8px; background:rgba(163,103,0,0.1); color:#a36700; border-radius:2px;">${(summary.countTimingGap || 0) + (summary.countOrphanedRefund || 0)} Events</span>
           </div>
           <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; cursor:pointer;">
             <div style="display:flex; align-items:center; gap:0.75rem;">
-              <span class="material-symbols-outlined" style="color:#a1392a;">search_off</span>
-              <span style="font-family:'JetBrains Mono',monospace; font-size:0.8rem;">Missing Records</span>
+              <span class="material-symbols-outlined" style="color:#a1392a;">content_copy</span>
+              <span style="font-family:'JetBrains Mono',monospace; font-size:0.8rem;">Duplicates</span>
             </div>
-            <span style="font-family:'JetBrains Mono',monospace; font-size:0.7rem; font-weight:700; padding:2px 8px; background:rgba(163,103,0,0.1); color:#a36700; border-radius:2px;">${summary.countMissing} Events</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:0.7rem; font-weight:700; padding:2px 8px; background:rgba(163,103,0,0.1); color:#a36700; border-radius:2px;">${summary.countDuplicate || 0} Events</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; cursor:pointer;">
+            <div style="display:flex; align-items:center; gap:0.75rem;">
+              <span class="material-symbols-outlined" style="color:#a1392a;">calculate</span>
+              <span style="font-family:'JetBrains Mono',monospace; font-size:0.8rem;">Rounding</span>
+            </div>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:0.7rem; font-weight:700; padding:2px 8px; background:rgba(163,103,0,0.1); color:#a36700; border-radius:2px;">${summary.countRounding || 0} Events</span>
           </div>
         </div>
         <div style="padding-top:1rem; border-top:1px solid rgba(222,192,187,0.2); text-align:center; margin-top:1rem;">
@@ -132,7 +145,7 @@ const Anomalies = (() => {
       html += `<div style="grid-column:span 3; display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">`;
       for (let i = 1; i < anomalies.length; i++) {
         const a = anomalies[i];
-        const icon = a.status === 'MISSING' ? 'search_off' : 'currency_exchange';
+        const icon = a.status === 'TIMING GAP' ? 'schedule' : a.status === 'DUPLICATE' ? 'content_copy' : a.status === 'ORPHANED REFUND' ? 'undo' : 'calculate';
         const globalIdx = results.indexOf(a);
         html += `
           <div style="background:#fff; padding:1.5rem; border-radius:0.5rem; box-shadow:0 4px 20px rgba(87,66,62,0.04),0 10px 40px rgba(87,66,62,0.06); transition:background 0.2s;" onmouseenter="this.style.background='#f5f3ef'" onmouseleave="this.style.background='#fff'">
@@ -155,7 +168,7 @@ const Anomalies = (() => {
               </div>
               <div style="display:flex; gap:0.375rem;">
                 <button style="color:#a1392a; border:1px solid rgba(161,57,42,0.2); padding:0.375rem 0.75rem; border-radius:2px; font-family:'JetBrains Mono',monospace; font-size:0.6rem; font-weight:700; text-transform:uppercase; background:none; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:0.25rem;" onmouseenter="this.style.background='#a1392a';this.style.color='#fff'" onmouseleave="this.style.background='none';this.style.color='#a1392a'" onclick="event.stopPropagation(); Claims.openClaimModal(App.loadSession().results[${globalIdx}])">
-                  <span class="material-symbols-outlined" style="font-size:12px;">gavel</span>Claim
+                  <span class="material-symbols-outlined" style="font-size:12px;">account_balance</span>Inquiry
                 </button>
                 <button style="color:#a1392a; border:1px solid rgba(161,57,42,0.2); padding:0.375rem 1rem; border-radius:2px; font-family:'JetBrains Mono',monospace; font-size:0.6rem; font-weight:700; text-transform:uppercase; background:none; cursor:pointer; transition:all 0.2s;" onmouseenter="this.style.background='#a1392a';this.style.color='#fff'" onmouseleave="this.style.background='none';this.style.color='#a1392a'" onclick="DetailPanel.open(${globalIdx})">Review</button>
               </div>
@@ -176,8 +189,8 @@ const Anomalies = (() => {
 function exportAnomalies() {
   const session = App.loadSession();
   if (!session) return;
-  const anomalies = session.results.filter(r => r.status === 'SHORT-PAID' || r.status === 'MISSING');
-  const headers = ['AWB', 'Order Date', 'City', 'Expected', 'Remitted', 'Gap', 'Status'];
+  const anomalies = session.results.filter(r => r.status === 'TIMING GAP' || r.status === 'DUPLICATE' || r.status === 'ROUNDING' || r.status === 'ORPHANED REFUND');
+  const headers = ['Transaction ID', 'Date', 'Customer', 'Expected', 'Settled', 'Gap', 'Status'];
   const rows = anomalies.map(r => [r.awb, r.orderDate || '', r.city, r.orderValue.toFixed(2), r.remittedAmount.toFixed(2), r.gap.toFixed(2), r.status]);
   App.downloadCSV('anomaly_audit_log.csv', App.arrayToCSV(headers, rows));
 }

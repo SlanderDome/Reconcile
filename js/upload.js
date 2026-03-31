@@ -28,13 +28,13 @@ const Upload = (() => {
     if (sampleOrder) {
       sampleOrder.addEventListener('click', (e) => {
         e.preventDefault();
-        App.downloadCSV('sample_order_export.csv', App.generateSampleOrderCSV());
+        App.downloadCSV('sample_platform_transactions.csv', App.generateSampleOrderCSV());
       });
     }
     if (sampleRemit) {
       sampleRemit.addEventListener('click', (e) => {
         e.preventDefault();
-        App.downloadCSV('sample_remittance.csv', App.generateSampleRemittanceCSV());
+        App.downloadCSV('sample_bank_settlement.csv', App.generateSampleRemittanceCSV());
       });
     }
 
@@ -147,11 +147,11 @@ const Upload = (() => {
         if (type === 'order') {
           orderCols = Reconciler.detectOrderColumns(headers);
           if (!orderCols.awb) {
-            alert('Could not detect AWB/Tracking column in the order file. Please ensure a column named AWB, Tracking Number, or similar exists.');
+            alert('Could not detect Transaction ID column in the platform file. Please ensure a column named TransactionID, ID, AWB, or similar exists.');
             return;
           }
           if (!orderCols.amount) {
-            alert('Could not detect Amount column in the order file. Please ensure a column named Expected Amount, Order Value, Amount, or similar exists.');
+            alert('Could not detect Amount column in the platform file. Please ensure a column named Amount, Expected Amount, or similar exists.');
             return;
           }
           orderData = json;
@@ -161,11 +161,11 @@ const Upload = (() => {
         } else {
           remitCols = Reconciler.detectRemittanceColumns(headers);
           if (!remitCols.awb) {
-            alert('Could not detect AWB/Tracking column in the remittance file. Please ensure a column named AWB, Tracking Number, or similar exists.');
+            alert('Could not detect Transaction ID column in the bank file. Please ensure a column named TransactionID, ID, AWB, or similar exists.');
             return;
           }
           if (!remitCols.amount) {
-            alert('Could not detect Amount column in the remittance file. Please ensure a column named Remitted Amount, Amount, Payout, or similar exists.');
+            alert('Could not detect Amount column in the bank file. Please ensure a column named Amount, Settlement Amount, or similar exists.');
             return;
           }
           remitData = json;
@@ -292,9 +292,9 @@ const Upload = (() => {
         const total = orderData.length + remitData.length;
         statusText.textContent = `Both sources matched. Ready to analyze ${total.toLocaleString()} data points.`;
       } else if (orderData) {
-        statusText.textContent = 'Order export loaded. Upload the remittance file to continue.';
+        statusText.textContent = 'Platform transactions loaded. Upload the bank settlement to continue.';
       } else if (remitData) {
-        statusText.textContent = 'Remittance file loaded. Upload the order export to continue.';
+        statusText.textContent = 'Bank settlement loaded. Upload the platform transactions to continue.';
       } else {
         statusText.textContent = 'Upload both files to begin reconciliation.';
       }

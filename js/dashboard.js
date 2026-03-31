@@ -32,7 +32,7 @@ const Dashboard = (() => {
   function populateMetrics() {
     const s = session.summary;
 
-    // Matched Orders card
+    // Card 1 — Matched Transactions
     const matchedCount = document.getElementById('metric-matched-count');
     const matchedNote = document.getElementById('metric-matched-note');
     if (matchedCount) {
@@ -43,28 +43,52 @@ const Dashboard = (() => {
       matchedNote.textContent = pct + '% match rate';
     }
 
-    // Missing/Pending card
+    // Card 2 — Timing Gaps
     const missingCount = document.getElementById('metric-missing-count');
     const missingNote = document.getElementById('metric-missing-note');
     if (missingCount) {
-      const total = s.countMissing + s.countPending;
-      App.animateValue(missingCount, 0, total, 600, (v) => Math.round(v).toLocaleString());
+      App.animateValue(missingCount, 0, s.countTimingGap || 0, 600, (v) => Math.round(v).toLocaleString());
     }
     if (missingNote) {
-      missingNote.textContent = 'Requires immediate action';
+      missingNote.textContent = App.formatCurrency(s.totalTimingGap || 0) + ' unmatched';
     }
 
-    // Short-paid Gap card
+    // Card 3 — Rounding Differences
     const shortpaidCount = document.getElementById('metric-shortpaid-count');
     const shortpaidNote = document.getElementById('metric-shortpaid-note');
     if (shortpaidCount) {
-      App.animateValue(shortpaidCount, 0, s.totalShortPaidGap, 600, (v) => App.formatCurrency(v));
+      App.animateValue(shortpaidCount, 0, s.totalRoundingGap || 0, 600, (v) => App.formatCurrency(v));
     }
     if (shortpaidNote) {
-      shortpaidNote.textContent = 'Spread across ' + s.countShortPaid + ' orders';
+      shortpaidNote.textContent = 'Across ' + (s.countRounding || 0) + ' transactions';
     }
 
-    // Recovery Potential Banner
+    // Card 4 — Duplicates & Orphaned Refunds
+    const duporphanCount = document.getElementById('metric-duporphan-count');
+    const duporphanNote = document.getElementById('metric-duporphan-note');
+    if (duporphanCount) {
+      const total = (s.countDuplicate || 0) + (s.countOrphanedRefund || 0);
+      App.animateValue(duporphanCount, 0, total, 600, (v) => Math.round(v).toLocaleString());
+    }
+    if (duporphanNote) {
+      duporphanNote.textContent = (s.countDuplicate || 0) + ' duplicates, ' + (s.countOrphanedRefund || 0) + ' orphans';
+    }
+
+    // Total Unreconciled Value banner (static card)
+    const unreconciledEl = document.getElementById('metric-unreconciled-value');
+    const unreconciledNote = document.getElementById('metric-unreconciled-note');
+    if (unreconciledEl) {
+      const totalUnreconciled = (s.totalRoundingGap || 0) +
+                                 (s.totalDuplicateGap || 0) + (s.totalOrphanedRefund || 0);
+      App.animateValue(unreconciledEl, 0, totalUnreconciled, 800, (v) => App.formatCurrency(v));
+      if (unreconciledNote) {
+        const totalCount = (s.countRounding || 0) +
+                           (s.countDuplicate || 0) + (s.countOrphanedRefund || 0);
+        unreconciledNote.textContent = 'Across ' + totalCount + ' discrepancies (excluding timing gaps)';
+      }
+    }
+
+    // Recovery / Unreconciled Amount Banner
     const recoveryBanner = document.getElementById('recovery-banner');
     const recoveryValue = document.getElementById('recovery-value');
     if (recoveryBanner && recoveryValue && typeof Claims !== 'undefined') {
@@ -73,10 +97,9 @@ const Dashboard = (() => {
         recoveryBanner.style.display = '';
         App.animateValue(recoveryValue, 0, totalRecovery, 900, (v) => App.formatCurrencyFull(v));
 
-        // Update subtitle with count
         const discrepancies = Claims.getDiscrepancies(session.results);
         const sub = recoveryBanner.querySelector('.recovery-banner-sub');
-        if (sub) sub.textContent = `across ${discrepancies.length} discrepancies — ready to claim today`;
+        if (sub) sub.textContent = `across ${discrepancies.length} discrepancies — ready to investigate today`;
       } else {
         recoveryBanner.style.display = 'none';
       }

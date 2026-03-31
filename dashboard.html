@@ -96,18 +96,18 @@
     <div id="empty-dashboard" class="empty-dashboard">
       <span class="material-symbols-outlined" style="font-size:4rem; color:var(--outline-variant);">inbox</span>
       <h2 style="font-family:var(--font-headline); font-size:1.75rem; font-weight:800; letter-spacing:-0.02em;">No Reconciliation Data</h2>
-      <p style="color:var(--on-surface-variant); max-width:24rem;">Upload your order export and remittance files to begin analyzing discrepancies.</p>
+      <p style="color:var(--on-surface-variant); max-width:24rem;">Upload your platform transactions and bank settlement files to begin analyzing discrepancies.</p>
       <a href="index.html" class="btn-primary" style="margin-top:1rem;">Go to Upload</a>
     </div>
 
     <!-- =========== OVERVIEW SUB-VIEW =========== -->
     <div data-content="overview" class="content-area">
       <!-- Metric Cards -->
-      <div class="metrics-grid">
+      <div class="metrics-grid" style="grid-template-columns:repeat(4,1fr);">
         <div class="metric-card">
           <div class="border-accent" style="background:rgba(0,108,78,0.4);"></div>
           <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
-            <span class="metric-label" style="color:var(--secondary);">Matched Orders</span>
+            <span class="metric-label" style="color:var(--secondary);">Matched Transactions</span>
             <span class="material-symbols-outlined" style="color:var(--secondary); font-size:1.25rem;">check_circle</span>
           </div>
           <h2 id="metric-matched-count" class="metric-value">0</h2>
@@ -117,34 +117,54 @@
         <div class="metric-card">
           <div class="border-accent" style="background:rgba(161,57,42,0.4);"></div>
           <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
-            <span class="metric-label" style="color:var(--primary);">Missing Entries</span>
-            <span class="material-symbols-outlined" style="color:var(--primary); font-size:1.25rem;">error_outline</span>
+            <span class="metric-label" style="color:var(--primary);">Timing Gaps</span>
+            <span class="material-symbols-outlined" style="color:var(--primary); font-size:1.25rem;">schedule</span>
           </div>
           <h2 id="metric-missing-count" class="metric-value">0</h2>
           <p id="metric-missing-note" class="metric-note" style="color:var(--primary);">—</p>
         </div>
 
         <div class="metric-card">
-          <div class="border-accent" style="background:rgba(163,103,0,0.4);"></div>
+          <div class="border-accent" style="background:rgba(138,113,109,0.4);"></div>
           <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
-            <span class="metric-label" style="color:var(--tertiary-container);">Short-paid Gap</span>
-            <span class="material-symbols-outlined" style="color:var(--tertiary-container); font-size:1.25rem;">account_balance_wallet</span>
+            <span class="metric-label" style="color:#8a716d;">Rounding Differences</span>
+            <span class="material-symbols-outlined" style="color:#8a716d; font-size:1.25rem;">calculate</span>
           </div>
           <h2 id="metric-shortpaid-count" class="metric-value">$0</h2>
-          <p id="metric-shortpaid-note" class="metric-note" style="color:var(--tertiary-container);">—</p>
+          <p id="metric-shortpaid-note" class="metric-note" style="color:#8a716d;">—</p>
         </div>
+
+        <div class="metric-card">
+          <div class="border-accent" style="background:rgba(163,103,0,0.4);"></div>
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
+            <span class="metric-label" style="color:var(--tertiary-container);">Duplicates & Orphans</span>
+            <span class="material-symbols-outlined" style="color:var(--tertiary-container); font-size:1.25rem;">content_copy</span>
+          </div>
+          <h2 id="metric-duporphan-count" class="metric-value">0</h2>
+          <p id="metric-duporphan-note" class="metric-note" style="color:var(--tertiary-container);">—</p>
+        </div>
+      </div>
+
+      <!-- Total Unreconciled Banner -->
+      <div style="background:linear-gradient(135deg, rgba(161,57,42,0.06) 0%, rgba(163,103,0,0.06) 100%); border:1px solid rgba(161,57,42,0.12); border-radius:var(--radius-xl); padding:1.25rem 1.75rem; display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+        <div>
+          <p class="metric-label" style="color:var(--primary); margin-bottom:0.25rem;">Total Unreconciled Value</p>
+          <h2 id="metric-unreconciled-value" style="font-family:var(--font-headline); font-size:1.75rem; font-weight:800; letter-spacing:-0.02em;">$0</h2>
+          <p id="metric-unreconciled-note" style="font-family:var(--font-label); font-size:0.6rem; color:var(--on-surface-variant);">—</p>
+        </div>
+        <span class="material-symbols-outlined" style="font-size:2rem; color:var(--primary); opacity:0.5;">account_balance</span>
       </div>
 
       <!-- Recovery Potential Banner -->
       <div id="recovery-banner" class="recovery-banner" style="display:none;">
         <div class="recovery-banner-text">
-          <p class="recovery-banner-label">Recovery Potential</p>
-          <h2 id="recovery-value" class="recovery-banner-value">₹0</h2>
-          <p class="recovery-banner-sub">ready to claim today</p>
+          <p class="recovery-banner-label">Total Unreconciled Amount</p>
+          <h2 id="recovery-value" class="recovery-banner-value">$0</h2>
+          <p class="recovery-banner-sub">ready to investigate today</p>
         </div>
         <button class="btn-recovery" onclick="Claims.generateAllClaims(App.loadSession().results)">
           <span class="material-symbols-outlined" style="font-size:18px;">download</span>
-          Generate All Claims
+          Generate All Inquiries
         </button>
       </div>
 
@@ -153,26 +173,28 @@
         <div class="table-header">
           <div>
             <h3 style="font-family:var(--font-headline); font-size:1.1rem; font-weight:700;">Transaction Ledger</h3>
-            <p style="font-family:var(--font-label); font-size:0.65rem; color:var(--on-surface-variant);">Real-time reconciliation status across all fulfillment channels.</p>
+            <p style="font-family:var(--font-label); font-size:0.65rem; color:var(--on-surface-variant);">Real-time reconciliation status across all settlement channels.</p>
           </div>
           <div class="filter-tabs">
             <button class="filter-tab filter-active" data-filter="all">All Results</button>
             <button class="filter-tab filter-inactive" data-filter="matched">Matched</button>
-            <button class="filter-tab filter-inactive" data-filter="shortpaid">Short-paid</button>
-            <button class="filter-tab filter-inactive" data-filter="missing">Missing</button>
+            <button class="filter-tab filter-inactive" data-filter="timing-gap">Timing Gap</button>
+            <button class="filter-tab filter-inactive" data-filter="rounding">Rounding</button>
+            <button class="filter-tab filter-inactive" data-filter="duplicate">Duplicate</button>
+            <button class="filter-tab filter-inactive" data-filter="orphaned">Orphaned</button>
           </div>
         </div>
         <div style="overflow-x:auto;">
           <table class="data-table">
             <thead>
               <tr>
-                <th>AWB Number</th>
-                <th>Order Date</th>
-                <th>Customer City</th>
-                <th style="text-align:right;">Expected</th>
-                <th style="text-align:right;">Remitted</th>
+                <th>Transaction ID</th>
+                <th>Date</th>
+                <th style="text-align:right;">Transaction Amt</th>
+                <th style="text-align:right;">Settled Amt</th>
                 <th style="text-align:right;">Gap</th>
                 <th style="text-align:center;">Status</th>
+                <th style="text-align:center;">Type</th>
               </tr>
             </thead>
             <tbody id="table-body"></tbody>
@@ -194,7 +216,7 @@
             <h4 style="font-family:var(--font-headline); font-weight:700;">Smart Insights</h4>
           </div>
           <p style="font-size:0.875rem; color:var(--on-surface-variant); line-height:1.6; margin-bottom:1rem;">
-            The reconciliation engine has identified patterns. Click into short-paid or missing rows to explore individual discrepancies in detail.
+            The reconciliation engine has identified patterns. Click into timing gaps, duplicates, or rounding entries to explore individual discrepancies in detail.
           </p>
           <button onclick="Dashboard.switchView('anomalies')" style="font-family:var(--font-label); font-size:0.65rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--primary); border-bottom:1px solid var(--primary); padding-bottom:2px; transition:color 0.2s;">View Deep Dive</button>
         </div>
@@ -325,11 +347,11 @@
     <div style="display:flex; gap:0.75rem;">
       <button id="btn-copy-awb" class="btn-secondary" onclick="DetailPanel.copyAWB()">
         <span class="material-symbols-outlined" style="font-size:14px; margin-right:0.25rem;">content_copy</span>
-        Copy AWB
+        Copy TXN ID
       </button>
       <button id="btn-generate-claim" class="btn-generate-claim" onclick="DetailPanel.generateClaim()">
-        <span class="material-symbols-outlined" style="font-size:14px;">gavel</span>
-        Generate Claim
+        <span class="material-symbols-outlined" style="font-size:14px;">account_balance</span>
+        Bank Inquiry
       </button>
       <button id="btn-mark-resolved" class="btn-primary" onclick="DetailPanel.markResolved()">
         Mark as resolved
@@ -343,16 +365,16 @@
       <div style="display:flex; flex-direction:column; gap:2rem;">
         <div>
           <p style="font-family:var(--font-label); font-size:0.6rem; text-transform:uppercase; letter-spacing:0.15em; color:var(--primary); margin-bottom:0.375rem;">Internal System</p>
-          <h3 style="font-family:var(--font-headline); font-size:1.75rem; font-weight:700; letter-spacing:-0.02em;">Order Record</h3>
-          <p style="color:rgba(87,66,62,0.7); font-size:0.875rem;">Source: Order Export</p>
+          <h3 style="font-family:var(--font-headline); font-size:1.75rem; font-weight:700; letter-spacing:-0.02em;">Platform Record</h3>
+          <p style="color:rgba(87,66,62,0.7); font-size:0.875rem;">Source: Platform Transactions</p>
         </div>
         <div style="display:flex; flex-direction:column; gap:1.5rem;">
           <div>
-            <div class="field-label">Tracking Identifier</div>
+            <div class="field-label">Transaction ID</div>
             <p id="detail-awb" class="field-value" style="font-size:1.125rem;">—</p>
           </div>
           <div>
-            <div class="field-label">Transaction Value</div>
+            <div class="field-label">Transaction Amount</div>
             <p id="detail-order-value" style="font-family:var(--font-label); font-size:1.5rem;">—</p>
           </div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
@@ -361,15 +383,15 @@
               <p id="detail-order-date" style="font-weight:500;">—</p>
             </div>
             <div>
-              <div class="field-label">Region</div>
+              <div class="field-label">Transaction Type</div>
               <p id="detail-order-city" style="font-weight:500;">—</p>
             </div>
           </div>
           <div style="padding:1.25rem; background:var(--surface-container-low); border-radius:var(--radius-xl); display:flex; align-items:center; gap:1rem;">
-            <span class="material-symbols-outlined" style="color:#78716c;">local_shipping</span>
+            <span class="material-symbols-outlined" style="color:#78716c;">account_balance</span>
             <div>
               <p id="detail-courier" style="font-weight:700; font-size:0.875rem;">—</p>
-              <p style="font-family:var(--font-label); font-size:0.6rem; text-transform:uppercase; letter-spacing:0.12em; color:rgba(87,66,62,0.6);">Carrier</p>
+              <p style="font-family:var(--font-label); font-size:0.6rem; text-transform:uppercase; letter-spacing:0.12em; color:rgba(87,66,62,0.6);">Payment Processor</p>
             </div>
           </div>
         </div>
@@ -379,8 +401,8 @@
       <div style="display:flex; flex-direction:column; gap:2rem;">
         <div>
           <p style="font-family:var(--font-label); font-size:0.6rem; text-transform:uppercase; letter-spacing:0.15em; color:var(--secondary); margin-bottom:0.375rem;">External Ledger</p>
-          <h3 style="font-family:var(--font-headline); font-size:1.75rem; font-weight:700; letter-spacing:-0.02em;">Settlement Data</h3>
-          <p style="color:rgba(87,66,62,0.7); font-size:0.875rem;">Source: Remittance File</p>
+          <h3 style="font-family:var(--font-headline); font-size:1.75rem; font-weight:700; letter-spacing:-0.02em;">Bank Settlement</h3>
+          <p style="color:rgba(87,66,62,0.7); font-size:0.875rem;">Source: Bank File</p>
         </div>
         <div style="display:flex; flex-direction:column; gap:1.5rem;">
           <div>
@@ -388,7 +410,7 @@
             <p id="detail-ref-id" class="field-value" style="font-size:1.125rem;">—</p>
           </div>
           <div>
-            <div class="field-label">Payout Amount</div>
+            <div class="field-label">Settled Amount</div>
             <p id="detail-remitted" style="font-family:var(--font-label); font-size:1.5rem;">—</p>
           </div>
 
@@ -405,15 +427,15 @@
           <!-- Fee Breakdown -->
           <div style="display:flex; flex-direction:column; gap:0;">
             <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid rgba(222,192,187,0.1);">
-              <span style="font-size:0.875rem; color:var(--on-surface-variant);">Base Fee</span>
+              <span style="font-size:0.875rem; color:var(--on-surface-variant);">Processing Fee</span>
               <span id="detail-base-fee" style="font-family:var(--font-label); font-size:0.8rem;">—</span>
             </div>
             <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid rgba(222,192,187,0.1);">
-              <span style="font-size:0.875rem; color:var(--on-surface-variant);">Fuel Surcharge</span>
+              <span style="font-size:0.875rem; color:var(--on-surface-variant);">Gateway Charge</span>
               <span id="detail-fuel-surcharge" style="font-family:var(--font-label); font-size:0.8rem;">—</span>
             </div>
             <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; color:var(--primary); font-weight:700;">
-              <span style="font-size:0.875rem;">Unexplained Gap</span>
+              <span style="font-size:0.875rem;">Unreconciled Delta</span>
               <span id="detail-unexplained-gap" style="font-family:var(--font-label); font-size:0.8rem;">—</span>
             </div>
           </div>

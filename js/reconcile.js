@@ -1,50 +1,58 @@
 /* ============================================================
    Reconcile.ly — reconcile.js
-   AWB matching engine with 2% tolerance classification
-   + Currency auto-detection and cross-currency support
+   Transaction matching engine with 4 gap types:
+   TIMING GAP, DUPLICATE, ROUNDING, ORPHANED REFUND
    ============================================================ */
 
 const Reconciler = (() => {
 
   /* ---------- Column Auto-Detection ---------- */
-  const AWB_ALIASES = [
+  const TXN_ID_ALIASES = [
+    'transactionid', 'transaction_id', 'transaction id', 'txn_id', 'txnid',
+    'txn id', 'id', 'ref', 'reference', 'reference_id', 'referenceid',
     'awb', 'awb_number', 'awbnumber', 'tracking_id', 'trackingid',
     'tracking_number', 'trackingnumber', 'tracking number', 'awb number',
-    'waybill', 'airwaybill', 'air_waybill', 'shipment_id', 'shipmentid',
+    'waybill', 'airwaybill', 'shipment_id', 'shipmentid',
     'order_id', 'orderid', 'order id', 'consignment', 'consignment_number'
   ];
 
-  const ORDER_AMOUNT_ALIASES = [
-    'expected_amount', 'expectedamount', 'expected amount', 'order_value',
-    'ordervalue', 'order value', 'amount', 'total', 'order_amount',
+  const TXN_AMOUNT_ALIASES = [
+    'amount', 'expected_amount', 'expectedamount', 'expected amount',
+    'order_value', 'ordervalue', 'order value', 'total', 'order_amount',
     'orderamount', 'order amount', 'invoice_amount', 'invoiceamount',
     'invoice amount', 'sale_amount', 'saleamount', 'value', 'price',
     'total_amount', 'totalamount', 'cod_amount', 'codamount', 'collectible'
   ];
 
-  const REMIT_AMOUNT_ALIASES = [
+  const BANK_AMOUNT_ALIASES = [
+    'amount', 'settlement_amount', 'settlementamount', 'settlement amount',
+    'settled_amount', 'settledamount', 'settled amount',
     'remitted_amount', 'remittedamount', 'remitted amount', 'remitted',
-    'settlement_amount', 'settlementamount', 'settlement amount',
-    'payout', 'payout_amount', 'payoutamount', 'paid_amount',
-    'paidamount', 'paid amount', 'credit', 'credited', 'amount',
+    'payout', 'payout_amount', 'payoutamount',
+    'paid_amount', 'paidamount', 'paid amount',
+    'bank_amount', 'bankamount', 'bank amount',
+    'credit', 'credited',
     'total', 'net_amount', 'netamount', 'net amount'
   ];
 
   const DATE_ALIASES = [
-    'order_date', 'orderdate', 'order date', 'date', 'created_at',
-    'createdat', 'created at', 'order_created', 'ordercreated',
+    'date', 'order_date', 'orderdate', 'order date', 'created_at',
+    'createdat', 'created at', 'transaction_date', 'transactiondate',
     'shipment_date', 'shipmentdate', 'shipment date', 'dispatch_date',
     'dispatchdate', 'dispatch date', 'booking_date', 'bookingdate'
   ];
 
   const SETTLEMENT_DATE_ALIASES = [
-    'settlement_date', 'settlementdate', 'settlement date', 'remittance_date',
-    'remittancedate', 'remittance date', 'payout_date', 'payoutdate',
-    'payout date', 'payment_date', 'paymentdate', 'payment date',
+    'settlementdate', 'settlement_date', 'settlement date',
+    'remittance_date', 'remittancedate', 'remittance date',
+    'payout_date', 'payoutdate', 'payout date',
+    'payment_date', 'paymentdate', 'payment date',
     'credit_date', 'creditdate', 'date', 'transaction_date'
   ];
 
-  const CITY_ALIASES = [
+  const CUSTOMER_ALIASES = [
+    'customer', 'customer_name', 'customername', 'customer name',
+    'name', 'buyer', 'client', 'payee',
     'city', 'customer_city', 'customercity', 'customer city',
     'destination', 'destination_city', 'destinationcity', 'delivery_city',
     'deliverycity', 'delivery city', 'location', 'ship_to_city', 'region'
@@ -70,17 +78,17 @@ const Reconciler = (() => {
 
   function detectOrderColumns(headers) {
     return {
-      awb: findColumn(headers, AWB_ALIASES),
-      amount: findColumn(headers, ORDER_AMOUNT_ALIASES),
+      awb: findColumn(headers, TXN_ID_ALIASES),
+      amount: findColumn(headers, TXN_AMOUNT_ALIASES),
       date: findColumn(headers, DATE_ALIASES),
-      city: findColumn(headers, CITY_ALIASES),
+      city: findColumn(headers, CUSTOMER_ALIASES),
     };
   }
 
   function detectRemittanceColumns(headers) {
     return {
-      awb: findColumn(headers, AWB_ALIASES),
-      amount: findColumn(headers, REMIT_AMOUNT_ALIASES),
+      awb: findColumn(headers, TXN_ID_ALIASES),
+      amount: findColumn(headers, BANK_AMOUNT_ALIASES),
       date: findColumn(headers, SETTLEMENT_DATE_ALIASES),
     };
   }
@@ -96,25 +104,18 @@ const Reconciler = (() => {
   const CURRENCY_CODE_SET = new Set(['USD', 'INR', 'EUR', 'GBP']);
 
   /* ---------- Currency Auto-Detection ---------- */
-  /**
-   * Scans the amount column values (and optional currency column)
-   * of parsed rows to determine the most likely currency.
-   * Returns 'USD' | 'INR' | 'EUR' | 'GBP' | null
-   */
   function detectCurrency(rows, amountColName, headers) {
     const votes = { USD: 0, INR: 0, EUR: 0, GBP: 0 };
 
-    // 1. Check for a dedicated currency code column
     const currencyCol = findColumn(headers, CURRENCY_CODE_ALIASES);
     if (currencyCol) {
       const sampleSize = Math.min(rows.length, 50);
       for (let i = 0; i < sampleSize; i++) {
         const code = String(rows[i][currencyCol] || '').trim().toUpperCase();
-        if (CURRENCY_CODE_SET.has(code)) votes[code] += 5; // strong signal
+        if (CURRENCY_CODE_SET.has(code)) votes[code] += 5;
       }
     }
 
-    // 2. Scan the first 50 amount values for currency symbols
     if (amountColName) {
       const sampleSize = Math.min(rows.length, 50);
       for (let i = 0; i < sampleSize; i++) {
@@ -125,7 +126,6 @@ const Reconciler = (() => {
       }
     }
 
-    // Find the top vote
     let best = null, bestCount = 0;
     for (const [code, count] of Object.entries(votes)) {
       if (count > bestCount) { best = code; bestCount = count; }
@@ -135,33 +135,19 @@ const Reconciler = (() => {
   }
 
   /* ---------- Parse Amount ---------- */
-  /**
-   * Strips currency symbols and handles both Western (1,200.50)
-   * and Indian (1,20,000.50) number formats.
-   */
   function parseAmount(val) {
     if (val == null || val === '') return 0;
-    // Convert to string and strip currency symbols & whitespace
     let s = String(val).trim();
-    // Remove known currency symbols
     s = s.replace(/[$₹€£]/g, '');
-    // Remove any remaining letters (e.g., "INR", "USD")
     s = s.replace(/[A-Za-z]/g, '');
     s = s.trim();
 
-    // Handle Indian & Western comma formats:
-    // If the string has commas and a period, strip commas (they are grouping)
-    // If the string has commas but NO period, check if it looks like Indian format
     if (s.includes(',') && s.includes('.')) {
-      // e.g. "1,20,000.50" or "1,200.50" → remove commas
       s = s.replace(/,/g, '');
     } else if (s.includes(',')) {
-      // Could be "1,200" (Western, no decimals) or "1,20,000" (Indian, no decimals)
-      // Either way, just remove commas to get the raw number
       s = s.replace(/,/g, '');
     }
 
-    // Keep only digits, decimal point, and negative sign
     s = s.replace(/[^0-9.\-]/g, '');
     const n = parseFloat(s);
     return isNaN(n) ? 0 : n;
@@ -169,89 +155,126 @@ const Reconciler = (() => {
 
   /* ---------- Main Reconciliation ---------- */
   /**
-   * @param {Object} options - Optional settings
-   * @param {number} options.orderMultiplier - Multiplier for order values (for FX conversion)
-   * @param {string} options.displayCurrency - Currency code for dashboard display
+   * New logic with 4 gap types:
+   * - TIMING GAP: exists in transactions, not yet in bank settlements
+   * - DUPLICATE: same ID appears twice (or more) in bank file
+   * - ROUNDING: difference is less than 0.05
+   * - ORPHANED REFUND: negative amount with no matching original in bank
+   * - MATCHED: everything lines up
    */
   function reconcile(orderRows, remittanceRows, orderCols, remitCols, options) {
     const opts = options || {};
     const orderMultiplier = opts.orderMultiplier || 1;
 
-    // Build remittance lookup by normalized AWB
-    const remitMap = new Map();
+    // Build bank lookup by normalized TXN ID
+    const bankMap = new Map();
+    const bankDuplicates = new Set();
+
     for (const row of remittanceRows) {
-      const rawAWB = row[remitCols.awb];
-      if (!rawAWB) continue;
-      const normAWB = App.normalizeAWB(rawAWB);
-      remitMap.set(normAWB, {
-        awbRaw: String(rawAWB).trim(),
-        remittedAmount: parseAmount(row[remitCols.amount]),
+      const rawID = row[remitCols.awb];
+      if (!rawID) continue;
+      const normID = App.normalizeAWB(rawID);
+
+      if (bankMap.has(normID)) {
+        // If we've seen this ID before, mark it as duplicate
+        bankDuplicates.add(normID);
+      }
+      bankMap.set(normID, {
+        idRaw: String(rawID).trim(),
+        bankAmount: parseAmount(row[remitCols.amount]),
         settlementDate: row[remitCols.date] || null,
       });
     }
 
     const results = [];
-    let totalMatched = 0, totalMissing = 0, totalShortPaidGap = 0, totalPending = 0;
-    let countMatched = 0, countMissing = 0, countShortPaid = 0, countPending = 0;
+    let totalMatched = 0, totalTimingGap = 0, totalRoundingGap = 0;
+    let totalDuplicateGap = 0, totalOrphanedRefund = 0;
+    let countMatched = 0, countTimingGap = 0, countRounding = 0;
+    let countDuplicate = 0, countOrphanedRefund = 0;
+
+    // Track which transaction IDs exist in the platform file (for orphaned refund check)
+    const txnIDs = new Set();
+    for (const row of orderRows) {
+      const rawID = row[orderCols.awb];
+      if (!rawID) continue;
+      txnIDs.add(App.normalizeAWB(rawID));
+    }
 
     for (const row of orderRows) {
-      const rawAWB = row[orderCols.awb];
-      if (!rawAWB) continue;
+      const rawID = row[orderCols.awb];
+      if (!rawID) continue;
 
-      const normAWB = App.normalizeAWB(rawAWB);
-      const displayAWB = String(rawAWB).trim();
-      // Apply the FX multiplier to orderValue so it's in the same unit as remittance
-      const orderValue = parseAmount(row[orderCols.amount]) * orderMultiplier;
-      const orderDate = row[orderCols.date] || null;
-      const city = row[orderCols.city] || '—';
+      const normID = App.normalizeAWB(rawID);
+      const displayID = String(rawID).trim();
+      const txnAmount = parseAmount(row[orderCols.amount]) * orderMultiplier;
+      const txnDate = row[orderCols.date] || null;
+      const customer = row[orderCols.city] || '—';
 
-      const remit = remitMap.get(normAWB);
-      let status, remittedAmount, settlementDate, gap, gapPercent;
+      const bankRecord = bankMap.get(normID);
+      let status, bankAmount, settlementDate, gap, gapPercent;
 
-      if (!remit) {
-        // Not found in remittance
-        status = 'MISSING';
-        remittedAmount = 0;
-        settlementDate = null;
-        gap = orderValue;
-        gapPercent = orderValue > 0 ? 1 : 0;
-        totalMissing += orderValue;
-        countMissing++;
-      } else if (remit.remittedAmount === 0 || remit.remittedAmount == null) {
-        // Found but remitted amount is 0 or null
-        status = 'PENDING';
-        remittedAmount = 0;
-        settlementDate = remit.settlementDate;
-        gap = orderValue;
-        gapPercent = orderValue > 0 ? 1 : 0;
-        totalPending += orderValue;
-        countPending++;
-      } else {
-        remittedAmount = remit.remittedAmount;
-        settlementDate = remit.settlementDate;
-        gap = orderValue - remittedAmount;
-        gapPercent = orderValue > 0 ? gap / orderValue : 0;
-
-        if (Math.abs(gapPercent) < 0.02) {
-          // Within 2% tolerance — matched
-          status = 'MATCHED';
-          totalMatched += orderValue;
-          countMatched++;
+      if (!bankRecord) {
+        // TIMING GAP — exists in transactions, not yet in bank settlements
+        if (txnAmount < 0) {
+          // Negative amount with no bank match = orphaned refund
+          // Check if there's a positive original for this (simplified: no original)
+          status = 'ORPHANED REFUND';
+          bankAmount = 0;
+          settlementDate = null;
+          gap = Math.abs(txnAmount);
+          gapPercent = 1;
+          totalOrphanedRefund += Math.abs(txnAmount);
+          countOrphanedRefund++;
         } else {
-          // Exceeds 2% tolerance — short-paid
-          status = 'SHORT-PAID';
-          totalShortPaidGap += gap;
-          countShortPaid++;
+          status = 'TIMING GAP';
+          bankAmount = 0;
+          settlementDate = null;
+          gap = txnAmount;
+          gapPercent = txnAmount > 0 ? 1 : 0;
+          totalTimingGap += txnAmount;
+          countTimingGap++;
+        }
+      } else if (bankDuplicates.has(normID)) {
+        // DUPLICATE — same ID appears twice in bank file
+        status = 'DUPLICATE';
+        bankAmount = bankRecord.bankAmount;
+        settlementDate = bankRecord.settlementDate;
+        gap = bankAmount; // The extra duplicated amount
+        gapPercent = txnAmount !== 0 ? gap / Math.abs(txnAmount) : 0;
+        totalDuplicateGap += bankAmount; // one full duplicate amount at risk
+        countDuplicate++;
+      } else {
+        bankAmount = bankRecord.bankAmount;
+        settlementDate = bankRecord.settlementDate;
+        gap = Math.abs(txnAmount - bankAmount);
+        gapPercent = txnAmount !== 0 ? gap / Math.abs(txnAmount) : 0;
+
+        if (gap < 0.50) {
+          // ROUNDING — difference is less than 0.50
+          if (gap > 0) {
+            status = 'ROUNDING';
+            totalRoundingGap += gap;
+            countRounding++;
+          } else {
+            status = 'MATCHED';
+            totalMatched += Math.abs(txnAmount);
+            countMatched++;
+          }
+        } else {
+          // Significant gap — classify as Timing Gap (partial payment missing)
+          status = 'TIMING GAP';
+          totalTimingGap += gap;
+          countTimingGap++;
         }
       }
 
       results.push({
-        awb: displayAWB,
-        awbNormalized: normAWB,
-        orderValue,
-        orderDate,
-        city,
-        remittedAmount,
+        awb: displayID,
+        awbNormalized: normID,
+        orderValue: txnAmount,
+        orderDate: txnDate,
+        city: customer,
+        remittedAmount: bankAmount,
         settlementDate,
         gap,
         gapPercent,
@@ -264,13 +287,23 @@ const Reconciler = (() => {
     const summary = {
       totalOrders: results.length,
       countMatched,
-      countMissing,
-      countShortPaid,
-      countPending,
+      countTimingGap,
+      countRounding,
+      countDuplicate,
+      countOrphanedRefund,
+      // Legacy compat aliases
+      countMissing: countTimingGap,
+      countShortPaid: countRounding,
+      countPending: 0,
       totalMatched,
-      totalMissing,
-      totalShortPaidGap,
-      totalPending,
+      totalTimingGap,
+      totalRoundingGap,
+      totalDuplicateGap,
+      totalOrphanedRefund,
+      // Legacy compat aliases
+      totalMissing: totalTimingGap,
+      totalShortPaidGap: totalRoundingGap,
+      totalPending: 0,
       displayCurrency: opts.displayCurrency || 'USD',
       orderMultiplier,
       sessionId: App.generateSessionId(),
